@@ -46,13 +46,13 @@ const placeholderBg = 'from-amber-600 to-amber-800';
 
     <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
       <!-- Cover Art -->
-      <div class="w-64 h-64 md:w-80 md:h-80 flex-shrink-0">
-        <div class="aspect-square rounded-xl overflow-hidden shadow-2xl">
+      <a href={`/songs/${slug}`} class="w-64 h-64 md:w-80 md:h-80 flex-shrink-0 block group">
+        <div class="aspect-square rounded-xl overflow-hidden shadow-2xl group-hover:shadow-amber-500/20 transition-shadow duration-300">
           {displayImage ? (
             <img
               src={displayImage}
               alt={`${title} by ${artist}`}
-              class="w-full h-full object-cover"
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
             <div class={`w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-br ${placeholderBg}`}>
@@ -62,7 +62,7 @@ const placeholderBg = 'from-amber-600 to-amber-800';
             </div>
           )}
         </div>
-      </div>
+      </a>
 
       <!-- Song Info -->
       <div class="flex-grow text-center md:text-left">
@@ -101,6 +101,7 @@ const placeholderBg = 'from-amber-600 to-amber-800';
             appleMusicUrl={appleMusicUrl}
             chordsUrl={chordsUrl}
             printableUrl={printableUrl}
+            dark
           />
         </div>
 
