@@ -39,26 +39,6 @@ Optional notes about the song go here.
 npm run build && netlify deploy --prod --dir=dist
 ```
 
-## Adding a Holiday Carol
-
-1. Create a new file in `src/content/holiday-carols/`:
-
-```bash
-touch src/content/holiday-carols/song-title.md
-```
-
-2. Use this template:
-
-```yaml
----
-title: "Carol Title"
-order: 16
-picker: "Person's Name"
-youtubeUrl: "https://youtube.com/..."
-chordsUrl: "https://tabs.ultimate-guitar.com/..."
----
-```
-
 ## Local Development
 
 ```bash
@@ -97,12 +77,11 @@ To enable auto-deploy on git push:
 ```
 src/
 ├── content/
-│   ├── songs/           # Monthly songs organized by year
-│   │   ├── 2023/
-│   │   ├── 2024/
-│   │   ├── 2025/
-│   │   └── 2026/
-│   └── holiday-carols/  # December holiday songs
+│   └── songs/           # Monthly songs organized by year
+│       ├── 2023/
+│       ├── 2024/
+│       ├── 2025/
+│       └── 2026/
 ├── components/          # Reusable UI components
 ├── layouts/             # Page layouts
 ├── pages/               # Route pages
@@ -110,8 +89,6 @@ src/
 ```
 
 ## Frontmatter Reference
-
-### Songs
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -128,17 +105,6 @@ src/
 | `spotifyUrl` | No | Spotify link |
 | `appleMusicUrl` | No | Apple Music link |
 | `coverImage` | No | Path to cover art (e.g., "/covers/image.jpg") |
-
-### Holiday Carols
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| `title` | Yes | Carol title |
-| `order` | No | Display order (1, 2, 3...) |
-| `picker` | No | Who suggested this carol |
-| `youtubeUrl` | No | YouTube link |
-| `chordsUrl` | No | Link to chord chart |
-| `printableUrl` | No | Link to printable sheet |
 
 ## Adding Cover Art
 
