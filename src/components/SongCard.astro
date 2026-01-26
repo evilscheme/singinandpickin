@@ -1,4 +1,6 @@
 ---
+import { getYouTubeThumbnail } from '../utils/youtube';
+
 interface Props {
   title: string;
   artist: string;
@@ -7,10 +9,14 @@ interface Props {
   picker: string;
   slug: string;
   coverImage?: string;
+  youtubeUrl?: string;
   compact?: boolean;
 }
 
-const { title, artist, month, year, picker, slug, coverImage, compact = false } = Astro.props;
+const { title, artist, month, year, picker, slug, coverImage, youtubeUrl, compact = false } = Astro.props;
+
+// Use coverImage if provided, otherwise try YouTube thumbnail
+const displayImage = coverImage || (youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : null);
 
 const placeholderBg = [
   'from-amber-600 to-amber-800',
@@ -21,9 +27,9 @@ const placeholderBg = [
 
 <a href={`/songs/${slug}`} class="card group block">
   <div class="aspect-square relative overflow-hidden bg-gradient-to-br {placeholderBg}">
-    {coverImage ? (
+    {displayImage ? (
       <img
-        src={coverImage}
+        src={displayImage}
         alt={`${title} by ${artist}`}
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         loading="lazy"

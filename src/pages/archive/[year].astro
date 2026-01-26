@@ -74,6 +74,7 @@ const allYears = [...new Set(allSongs.map((s) => s.data.year))].sort((a, b) => b
             picker={song.data.picker}
             slug={songSlug}
             coverImage={song.data.coverImage}
+            youtubeUrl={song.data.youtubeUrl}
           />
         );
       })}

@@ -1,5 +1,11 @@
 import { defineCollection, z } from 'astro:content';
 
+const extrasSchema = z.object({
+  title: z.string(),
+  url: z.string().url(),
+  type: z.enum(['audio', 'video']).default('audio'),
+});
+
 const songsCollection = defineCollection({
   type: 'content',
   schema: z.object({
@@ -16,6 +22,7 @@ const songsCollection = defineCollection({
     spotifyUrl: z.string().url().optional(),
     appleMusicUrl: z.string().url().optional(),
     coverImage: z.string().optional(),
+    extras: z.array(extrasSchema).optional(),
   }),
 });
 

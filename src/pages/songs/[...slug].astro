@@ -3,7 +3,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import YouTubeEmbed from '../../components/YouTubeEmbed.astro';
 import ChordChart from '../../components/ChordChart.astro';
 import StreamingLinks from '../../components/StreamingLinks.astro';
+import ExtrasSection from '../../components/ExtrasSection.astro';
 import { getCollection } from 'astro:content';
+import { getYouTubeThumbnail } from '../../utils/youtube';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
@@ -19,7 +21,6 @@ interface Props {
 }
 
 const { song } = Astro.props;
-const { Content } = await song.render();
 
 // Get all songs for prev/next navigation
 const allSongs = await getCollection('songs');
@@ -27,6 +28,9 @@ const sortedSongs = allSongs.sort((a, b) => b.data.date.getTime() - a.data.date.
 const currentIndex = sortedSongs.findIndex((s) => s.slug === song.slug);
 const prevSong = sortedSongs[currentIndex + 1];
 const nextSong = sortedSongs[currentIndex - 1];
+
+// Use coverImage if provided, otherwise try YouTube thumbnail
+const displayImage = song.data.coverImage || (song.data.youtubeUrl ? getYouTubeThumbnail(song.data.youtubeUrl) : null);
 
 const placeholderBg = 'from-amber-600 to-amber-800';
 ---
@@ -47,9 +51,9 @@ const placeholderBg = 'from-amber-600 to-amber-800';
         <!-- Cover Art -->
         <div class="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 mx-auto md:mx-0">
           <div class="aspect-square rounded-xl overflow-hidden shadow-xl">
-            {song.data.coverImage ? (
+            {displayImage ? (
               <img
-                src={song.data.coverImage}
+                src={displayImage}
                 alt={`${song.data.title} by ${song.data.artist}`}
                 class="w-full h-full object-cover"
               />
@@ -106,16 +110,14 @@ const placeholderBg = 'from-amber-600 to-amber-800';
       </section>
     )}
 
+    <!-- Additional Resources (extras) -->
+    {song.data.extras && <ExtrasSection extras={song.data.extras} />}
+
     <!-- Chord Chart / Content -->
     {song.body && song.body.trim() && (
       <section class="mb-12">
         <h2 class="font-serif text-2xl font-bold text-earth-900 mb-4">Chords & Lyrics</h2>
         <ChordChart content={song.body} />
-
-        <!-- Notes rendered from markdown -->
-        <div class="prose prose-earth mt-6">
-          <Content />
-        </div>
       </section>
     )}
 

@@ -1,5 +1,6 @@
 ---
 import StreamingLinks from './StreamingLinks.astro';
+import { getYouTubeThumbnail } from '../utils/youtube';
 
 interface Props {
   title: string;
@@ -33,6 +34,9 @@ const {
   printableUrl,
 } = Astro.props;
 
+// Use coverImage if provided, otherwise try YouTube thumbnail
+const displayImage = coverImage || (youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : null);
+
 const placeholderBg = 'from-amber-600 to-amber-800';
 ---
 
@@ -44,9 +48,9 @@ const placeholderBg = 'from-amber-600 to-amber-800';
       <!-- Cover Art -->
       <div class="w-64 h-64 md:w-80 md:h-80 flex-shrink-0">
         <div class="aspect-square rounded-xl overflow-hidden shadow-2xl">
-          {coverImage ? (
+          {displayImage ? (
             <img
-              src={coverImage}
+              src={displayImage}
               alt={`${title} by ${artist}`}
               class="w-full h-full object-cover"
             />
