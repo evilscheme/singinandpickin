@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-earth-50 text-earth-900 font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-amber-600 text-white hover:bg-amber-700 shadow-md hover:shadow-lg;
+  }
+
+  .btn-secondary {
+    @apply bg-earth-200 text-earth-800 hover:bg-earth-300;
+  }
+
+  .btn-outline {
+    @apply border-2 border-earth-300 text-earth-700 hover:border-amber-500 hover:text-amber-700;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-md overflow-hidden transition-all duration-200 hover:shadow-lg;
+  }
+
+  .chord-chart {
+    @apply font-mono text-sm leading-relaxed bg-earth-100 p-6 rounded-xl border border-earth-200;
+  }
+
+  .chord {
+    @apply text-amber-700 font-semibold;
+  }
+
+  .lyrics {
+    @apply text-earth-800;
+  }
+
+  .section-header {
+    @apply text-earth-500 font-sans text-xs uppercase tracking-wider font-semibold mb-1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ChordPro styling */
+.chordpro-container {
+  @apply font-mono text-base leading-loose;
+}
+
+.chordpro-line {
+  @apply relative mb-2;
+}
+
+.chordpro-chord {
+  @apply text-amber-700 font-bold;
+}
+
+.chordpro-lyrics {
+  @apply text-earth-800;
+}
+
+.chordpro-comment {
+  @apply text-sage-600 italic text-sm;
+}
+
+.chordpro-section {
+  @apply text-sage-700 font-semibold text-sm uppercase tracking-wide mt-6 mb-2;
+}

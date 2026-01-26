@@ -1,0 +1,133 @@
+---
+interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+
+// Simple ChordPro parser
+function parseChordPro(text: string): string {
+  const lines = text.split('\n');
+  let html = '';
+  let inChordPro = false;
+
+  for (const line of lines) {
+    // Skip code fence markers
+    if (line.trim() === '```chordpro' || line.trim() === '```') {
+      inChordPro = !inChordPro;
+      continue;
+    }
+
+    if (!inChordPro && !line.includes('[')) {
+      // Not ChordPro content, skip
+      continue;
+    }
+
+    // Handle directives
+    if (line.startsWith('{') && line.endsWith('}')) {
+      const directive = line.slice(1, -1);
+      const [cmd, ...valueParts] = directive.split(':');
+      const value = valueParts.join(':').trim();
+
+      switch (cmd.toLowerCase()) {
+        case 'title':
+        case 't':
+          // Skip title, we display it elsewhere
+          continue;
+        case 'subtitle':
+        case 'st':
+        case 'artist':
+          continue;
+        case 'comment':
+        case 'c':
+          html += `<div class="chordpro-comment">${value}</div>`;
+          continue;
+        case 'soc':
+        case 'start_of_chorus':
+          html += `<div class="chordpro-section">Chorus</div><div class="pl-4 border-l-4 border-amber-400">`;
+          continue;
+        case 'eoc':
+        case 'end_of_chorus':
+          html += `</div>`;
+          continue;
+        case 'sov':
+        case 'start_of_verse':
+          html += `<div class="chordpro-section">Verse</div>`;
+          continue;
+        case 'eov':
+        case 'end_of_verse':
+          continue;
+        case 'sob':
+        case 'start_of_bridge':
+          html += `<div class="chordpro-section">Bridge</div>`;
+          continue;
+        case 'eob':
+        case 'end_of_bridge':
+          continue;
+        default:
+          if (cmd.toLowerCase().includes('verse') || cmd.toLowerCase().includes('chorus') || cmd.toLowerCase().includes('bridge') || cmd.toLowerCase().includes('intro') || cmd.toLowerCase().includes('outro')) {
+            html += `<div class="chordpro-section">${directive}</div>`;
+          }
+          continue;
+      }
+    }
+
+    // Parse chords in brackets
+    if (line.includes('[')) {
+      // Build chord line and lyric line
+      let chordLine = '';
+      let lyricLine = '';
+      let position = 0;
+      let lastChordEnd = 0;
+
+      const chordRegex = /\[([^\]]+)\]/g;
+      let match;
+
+      while ((match = chordRegex.exec(line)) !== null) {
+        // Add lyrics before this chord
+        const lyricsBefore = line.slice(lastChordEnd, match.index).replace(/\[([^\]]+)\]/g, '');
+        lyricLine += lyricsBefore;
+
+        // Pad chord line to match lyric position
+        while (chordLine.length < lyricLine.length) {
+          chordLine += ' ';
+        }
+
+        // Add chord
+        chordLine += match[1];
+        lastChordEnd = match.index + match[0].length;
+      }
+
+      // Add remaining lyrics
+      lyricLine += line.slice(lastChordEnd).replace(/\[([^\]]+)\]/g, '');
+
+      // Output both lines
+      if (chordLine.trim()) {
+        html += `<div class="chordpro-chord whitespace-pre">${chordLine}</div>`;
+      }
+      if (lyricLine.trim()) {
+        html += `<div class="chordpro-lyrics whitespace-pre">${lyricLine}</div>`;
+      }
+      if (!chordLine.trim() && !lyricLine.trim()) {
+        html += `<div class="h-4"></div>`;
+      }
+    } else if (line.trim()) {
+      // Plain lyric line
+      html += `<div class="chordpro-lyrics">${line}</div>`;
+    } else {
+      // Empty line
+      html += `<div class="h-4"></div>`;
+    }
+  }
+
+  return html;
+}
+
+const parsedContent = parseChordPro(content);
+---
+
+{parsedContent && (
+  <div class="chord-chart chordpro-container">
+    <Fragment set:html={parsedContent} />
+  </div>
+)}

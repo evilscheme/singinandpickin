@@ -1,0 +1,52 @@
+---
+interface Props {
+  title: string;
+  artist: string;
+  month: string;
+  year: number;
+  picker: string;
+  slug: string;
+  coverImage?: string;
+  compact?: boolean;
+}
+
+const { title, artist, month, year, picker, slug, coverImage, compact = false } = Astro.props;
+
+const placeholderBg = [
+  'from-amber-600 to-amber-800',
+  'from-sage-600 to-sage-800',
+  'from-earth-600 to-earth-800',
+][Math.abs(title.length + artist.length) % 3];
+---
+
+<a href={`/songs/${slug}`} class="card group block">
+  <div class="aspect-square relative overflow-hidden bg-gradient-to-br {placeholderBg}">
+    {coverImage ? (
+      <img
+        src={coverImage}
+        alt={`${title} by ${artist}`}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+      />
+    ) : (
+      <div class={`w-full h-full flex flex-col items-center justify-center p-4 text-white bg-gradient-to-br ${placeholderBg}`}>
+        <span class="text-4xl mb-2" aria-hidden="true">🎵</span>
+        <span class="font-serif text-center text-lg font-medium leading-tight">{title}</span>
+        <span class="text-sm opacity-80 mt-1">{artist}</span>
+      </div>
+    )}
+    <div class="absolute top-2 right-2 bg-earth-900/80 text-amber-400 text-xs font-medium px-2 py-1 rounded">
+      {month.slice(0, 3)} {year}
+    </div>
+  </div>
+
+  {!compact && (
+    <div class="p-4">
+      <h3 class="font-serif text-lg font-semibold text-earth-900 group-hover:text-amber-700 transition-colors truncate">
+        {title}
+      </h3>
+      <p class="text-earth-600 text-sm truncate">{artist}</p>
+      <p class="text-earth-400 text-xs mt-2">Picked by {picker}</p>
+    </div>
+  )}
+</a>

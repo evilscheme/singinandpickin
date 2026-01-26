@@ -1,0 +1,39 @@
+---
+interface Props {
+  url: string;
+  title: string;
+}
+
+const { url, title } = Astro.props;
+
+// Extract video ID from various YouTube URL formats
+function getYouTubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+    /youtube\.com\/shorts\/([^&\n?#]+)/,
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+const videoId = getYouTubeId(url);
+---
+
+{videoId && (
+  <div class="youtube-embed">
+    <div class="aspect-video rounded-xl overflow-hidden shadow-lg bg-earth-200">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+        title={`${title} - YouTube`}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+        class="w-full h-full"
+      ></iframe>
+    </div>
+  </div>
+)}

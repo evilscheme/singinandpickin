@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SongCard from '../../components/SongCard.astro';
+import { getCollection } from 'astro:content';
+
+// Get all songs
+const allSongs = await getCollection('songs');
+
+// Group songs by year
+const songsByYear = allSongs.reduce((acc, song) => {
+  const year = song.data.year;
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(song);
+  return acc;
+}, {} as Record<number, typeof allSongs>);
+
+// Sort years descending
+const years = Object.keys(songsByYear)
+  .map(Number)
+  .sort((a, b) => b - a);
+
+// Sort songs within each year by date descending
+years.forEach((year) => {
+  songsByYear[year].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+});
+---
+
+<BaseLayout title="Archive">
+  <div class="bg-earth-900 text-white py-12">
+    <div class="max-w-6xl mx-auto px-4">
+      <h1 class="font-serif text-4xl font-bold text-amber-400 mb-4">Song Archive</h1>
+      <p class="text-earth-300 text-lg">Browse all the songs we've shared over the years.</p>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Year Navigation -->
+    <div class="flex flex-wrap gap-2 mb-8 sticky top-16 bg-earth-50 py-4 z-40">
+      {years.map((year) => (
+        <a
+          href={`#year-${year}`}
+          class="px-4 py-2 rounded-full bg-earth-200 text-earth-700 hover:bg-amber-500 hover:text-white transition-colors font-medium text-sm"
+        >
+          {year}
+          <span class="text-earth-500 ml-1">({songsByYear[year].length})</span>
+        </a>
+      ))}
+    </div>
+
+    <!-- Songs by Year -->
+    {years.map((year) => (
+      <section id={`year-${year}`} class="mb-16 scroll-mt-32">
+        <h2 class="font-serif text-3xl font-bold text-earth-900 mb-6 flex items-center gap-3">
+          <span class="bg-amber-500 text-white px-4 py-1 rounded">{year}</span>
+          <span class="text-earth-400 text-lg font-normal">
+            {songsByYear[year].length} {songsByYear[year].length === 1 ? 'song' : 'songs'}
+          </span>
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {songsByYear[year].map((song) => {
+            const songSlug = `${song.data.year}/${song.slug.split('/').pop()}`;
+            return (
+              <SongCard
+                title={song.data.title}
+                artist={song.data.artist}
+                month={song.data.month}
+                year={song.data.year}
+                picker={song.data.picker}
+                slug={songSlug}
+                coverImage={song.data.coverImage}
+              />
+            );
+          })}
+        </div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

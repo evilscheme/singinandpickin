@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import YouTubeEmbed from '../../components/YouTubeEmbed.astro';
+import ChordChart from '../../components/ChordChart.astro';
+import StreamingLinks from '../../components/StreamingLinks.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const songs = await getCollection('songs');
+
+  return songs.map((song) => ({
+    params: { slug: `${song.data.year}/${song.slug.split('/').pop()}` },
+    props: { song },
+  }));
+}
+
+interface Props {
+  song: Awaited<ReturnType<typeof getCollection<'songs'>>>[number];
+}
+
+const { song } = Astro.props;
+const { Content } = await song.render();
+
+// Get all songs for prev/next navigation
+const allSongs = await getCollection('songs');
+const sortedSongs = allSongs.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const currentIndex = sortedSongs.findIndex((s) => s.slug === song.slug);
+const prevSong = sortedSongs[currentIndex + 1];
+const nextSong = sortedSongs[currentIndex - 1];
+
+const placeholderBg = 'from-amber-600 to-amber-800';
+---
+
+<BaseLayout title={`${song.data.title} by ${song.data.artist}`}>
+  <article class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Header -->
+    <header class="mb-12">
+      <nav class="text-sm text-earth-500 mb-6">
+        <a href="/archive" class="hover:text-amber-600">Archive</a>
+        <span class="mx-2">/</span>
+        <a href={`/archive/${song.data.year}`} class="hover:text-amber-600">{song.data.year}</a>
+        <span class="mx-2">/</span>
+        <span class="text-earth-700">{song.data.title}</span>
+      </nav>
+
+      <div class="flex flex-col md:flex-row gap-8">
+        <!-- Cover Art -->
+        <div class="w-48 h-48 md:w-64 md:h-64 flex-shrink-0 mx-auto md:mx-0">
+          <div class="aspect-square rounded-xl overflow-hidden shadow-xl">
+            {song.data.coverImage ? (
+              <img
+                src={song.data.coverImage}
+                alt={`${song.data.title} by ${song.data.artist}`}
+                class="w-full h-full object-cover"
+              />
+            ) : (
+              <div class={`w-full h-full flex flex-col items-center justify-center p-4 text-white bg-gradient-to-br ${placeholderBg}`}>
+                <span class="text-5xl mb-2" aria-hidden="true">🎵</span>
+                <span class="font-serif text-center text-xl font-medium leading-tight">{song.data.title}</span>
+                <span class="text-sm opacity-80 mt-1">{song.data.artist}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <!-- Song Info -->
+        <div class="flex-grow text-center md:text-left">
+          <h1 class="font-serif text-4xl font-bold text-earth-900 mb-2">
+            {song.data.title}
+          </h1>
+          <p class="text-2xl text-earth-600 mb-4">{song.data.artist}</p>
+
+          <dl class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-6">
+            <div>
+              <dt class="section-header">Month</dt>
+              <dd class="text-earth-800 font-medium">{song.data.month} {song.data.year}</dd>
+            </div>
+            {song.data.key && (
+              <div>
+                <dt class="section-header">Key</dt>
+                <dd class="text-earth-800 font-medium">{song.data.key}</dd>
+              </div>
+            )}
+            <div>
+              <dt class="section-header">Picker</dt>
+              <dd class="text-earth-800 font-medium">{song.data.picker}</dd>
+            </div>
+          </dl>
+
+          <StreamingLinks
+            youtubeUrl={song.data.youtubeUrl}
+            spotifyUrl={song.data.spotifyUrl}
+            appleMusicUrl={song.data.appleMusicUrl}
+            chordsUrl={song.data.chordsUrl}
+            printableUrl={song.data.printableUrl}
+          />
+        </div>
+      </div>
+    </header>
+
+    <!-- YouTube Embed -->
+    {song.data.youtubeUrl && (
+      <section class="mb-12">
+        <h2 class="font-serif text-2xl font-bold text-earth-900 mb-4">Listen</h2>
+        <YouTubeEmbed url={song.data.youtubeUrl} title={song.data.title} />
+      </section>
+    )}
+
+    <!-- Chord Chart / Content -->
+    {song.body && song.body.trim() && (
+      <section class="mb-12">
+        <h2 class="font-serif text-2xl font-bold text-earth-900 mb-4">Chords & Lyrics</h2>
+        <ChordChart content={song.body} />
+
+        <!-- Notes rendered from markdown -->
+        <div class="prose prose-earth mt-6">
+          <Content />
+        </div>
+      </section>
+    )}
+
+    <!-- Prev/Next Navigation -->
+    <nav class="border-t border-earth-200 pt-8 mt-12">
+      <div class="flex justify-between">
+        {prevSong ? (
+          <a
+            href={`/songs/${prevSong.data.year}/${prevSong.slug.split('/').pop()}`}
+            class="flex items-center gap-3 text-earth-600 hover:text-amber-700 group"
+          >
+            <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <div class="text-left">
+              <div class="text-xs text-earth-400">Previous</div>
+              <div class="font-medium">{prevSong.data.title}</div>
+            </div>
+          </a>
+        ) : (
+          <div></div>
+        )}
+
+        {nextSong ? (
+          <a
+            href={`/songs/${nextSong.data.year}/${nextSong.slug.split('/').pop()}`}
+            class="flex items-center gap-3 text-earth-600 hover:text-amber-700 group"
+          >
+            <div class="text-right">
+              <div class="text-xs text-earth-400">Next</div>
+              <div class="font-medium">{nextSong.data.title}</div>
+            </div>
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        ) : (
+          <div></div>
+        )}
+      </div>
+    </nav>
+  </article>
+</BaseLayout>

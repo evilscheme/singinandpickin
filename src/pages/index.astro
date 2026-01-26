@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CurrentSongHero from '../components/CurrentSongHero.astro';
+import SongCard from '../components/SongCard.astro';
+import { getCollection } from 'astro:content';
+
+// Get all songs, sorted by date descending
+const allSongs = await getCollection('songs');
+const sortedSongs = allSongs.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+// Current song is the most recent
+const currentSong = sortedSongs[0];
+const currentSlug = `${currentSong.data.year}/${currentSong.slug.split('/').pop()}`;
+
+// Recent songs (next 4 after current)
+const recentSongs = sortedSongs.slice(1, 5);
+---
+
+<BaseLayout title="Home">
+  {currentSong && (
+    <CurrentSongHero
+      title={currentSong.data.title}
+      artist={currentSong.data.artist}
+      month={currentSong.data.month}
+      year={currentSong.data.year}
+      picker={currentSong.data.picker}
+      slug={currentSlug}
+      key={currentSong.data.key}
+      coverImage={currentSong.data.coverImage}
+      youtubeUrl={currentSong.data.youtubeUrl}
+      spotifyUrl={currentSong.data.spotifyUrl}
+      appleMusicUrl={currentSong.data.appleMusicUrl}
+      chordsUrl={currentSong.data.chordsUrl}
+      printableUrl={currentSong.data.printableUrl}
+    />
+  )}
+
+  <!-- Recent Songs Section -->
+  <section class="py-16 bg-earth-100">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="font-serif text-3xl font-bold text-earth-900">Recent Songs</h2>
+        <a href="/archive" class="text-amber-700 hover:text-amber-800 font-medium flex items-center gap-2">
+          View All
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {recentSongs.map((song) => {
+          const songSlug = `${song.data.year}/${song.slug.split('/').pop()}`;
+          return (
+            <SongCard
+              title={song.data.title}
+              artist={song.data.artist}
+              month={song.data.month}
+              year={song.data.year}
+              picker={song.data.picker}
+              slug={songSlug}
+              coverImage={song.data.coverImage}
+            />
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Holiday Carols CTA -->
+  <section class="py-16 bg-sage-800 text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <span class="text-5xl mb-4 block" aria-hidden="true">🎄</span>
+      <h2 class="font-serif text-3xl font-bold mb-4">Holiday Carols</h2>
+      <p class="text-sage-200 text-lg mb-6">
+        Our special collection of holiday favorites for December gatherings.
+      </p>
+      <a href="/holiday-carols" class="btn btn-primary bg-amber-500 hover:bg-amber-600">
+        Browse Holiday Carols
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="py-16 bg-earth-50">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="font-serif text-3xl font-bold text-earth-900 mb-4">About Our Gathering</h2>
+      <p class="text-earth-600 text-lg leading-relaxed">
+        Each month, our group gathers to sing and play music together. One person picks a song,
+        and we all learn it for our monthly get-together. This site is our songbook—a growing
+        collection of the tunes we've shared over the years.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

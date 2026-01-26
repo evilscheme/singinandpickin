@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SongCard from '../../components/SongCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allSongs = await getCollection('songs');
+  const years = [...new Set(allSongs.map((song) => song.data.year))];
+
+  return years.map((year) => ({
+    params: { year: String(year) },
+    props: {
+      year,
+      songs: allSongs
+        .filter((song) => song.data.year === year)
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+}
+
+interface Props {
+  year: number;
+  songs: Awaited<ReturnType<typeof getCollection<'songs'>>>;
+}
+
+const { year, songs } = Astro.props;
+
+// Get all years for navigation
+const allSongs = await getCollection('songs');
+const allYears = [...new Set(allSongs.map((s) => s.data.year))].sort((a, b) => b - a);
+---
+
+<BaseLayout title={`${year} Songs`}>
+  <div class="bg-earth-900 text-white py-12">
+    <div class="max-w-6xl mx-auto px-4">
+      <nav class="text-sm text-earth-400 mb-4">
+        <a href="/archive" class="hover:text-amber-400">Archive</a>
+        <span class="mx-2">/</span>
+        <span class="text-earth-200">{year}</span>
+      </nav>
+      <h1 class="font-serif text-4xl font-bold text-amber-400 mb-4">{year} Songs</h1>
+      <p class="text-earth-300 text-lg">{songs.length} songs from {year}.</p>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Year Navigation -->
+    <div class="flex flex-wrap gap-2 mb-8">
+      {allYears.map((y) => (
+        <a
+          href={`/archive/${y}`}
+          class:list={[
+            "px-4 py-2 rounded-full font-medium text-sm transition-colors",
+            y === year
+              ? "bg-amber-500 text-white"
+              : "bg-earth-200 text-earth-700 hover:bg-amber-500 hover:text-white"
+          ]}
+        >
+          {y}
+        </a>
+      ))}
+    </div>
+
+    <!-- Songs Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {songs.map((song) => {
+        const songSlug = `${song.data.year}/${song.slug.split('/').pop()}`;
+        return (
+          <SongCard
+            title={song.data.title}
+            artist={song.data.artist}
+            month={song.data.month}
+            year={song.data.year}
+            picker={song.data.picker}
+            slug={songSlug}
+            coverImage={song.data.coverImage}
+          />
+        );
+      })}
+    </div>
+  </div>
+</BaseLayout>
