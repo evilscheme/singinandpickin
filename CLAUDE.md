@@ -16,7 +16,7 @@ A static website for a monthly song-sharing gathering. Each month, one person pi
 npm run dev          # Start dev server at localhost:4321
 npm run check        # Run TypeScript/Astro linting (no build)
 npm run build        # Lint + build to dist/
-npm run build && netlify deploy --prod --dir=dist  # Build and deploy
+npm run deploy       # Build and deploy to Netlify
 ```
 
 ## Content Structure

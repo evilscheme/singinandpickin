@@ -8,6 +8,7 @@
     "build": "astro check && astro build",
     "check": "astro check",
     "preview": "astro preview",
+    "deploy": "npm run build && netlify deploy --prod --dir=dist",
     "astro": "astro",
     "migrate": "npx tsx scripts/migrate-excel.ts"
   },

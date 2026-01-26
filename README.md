@@ -36,7 +36,7 @@ Optional notes about the song go here.
 3. Deploy:
 
 ```bash
-npm run build && netlify deploy --prod --dir=dist
+npm run deploy
 ```
 
 ## Local Development
@@ -63,7 +63,7 @@ npm run preview
 ### Manual Deploy
 
 ```bash
-npm run build && netlify deploy --prod --dir=dist
+npm run deploy
 ```
 
 ### Auto-Deploy (Optional)
