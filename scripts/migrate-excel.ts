@@ -1,6 +1,5 @@
 import XLSX from 'xlsx';
 import fs from 'fs';
-import path from 'path';
 
 const EXCEL_FILE = './Singin and Pickin.xlsx';
 

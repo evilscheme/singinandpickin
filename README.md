@@ -48,6 +48,9 @@ npm install
 # Start dev server
 npm run dev
 
+# Check for TypeScript/linting errors
+npm run check
+
 # Build for production
 npm run build
 
