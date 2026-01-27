@@ -9,11 +9,11 @@ key: "Am"
 youtubeUrl: "https://www.youtube.com/watch?v=ns1_1jU4Ycw"
 chordsUrl: "https://tabs.ultimate-guitar.com/tab/hem/the-cuckoo-chords-4846394"
 extras:
-  - title: "Isolated Harmony"
-    url: "https://drive.google.com/file/d/1ivSgIcpYFWP_Qa4NhnlQkdYrTaH3GiBK/view?usp=drive_link"
-    type: "audio"
-  - title: "Isolated Harmony"
+  - title: "Isolated Harmony - A mix of the song with the harmony emphasized and panned to the right channel"
     url: "https://soundcloud.com/bryan-burns-3/the-cuckoo-remastered-2025-isolated-harmony?si=10103ff9d5624d62b9466c9007f05075"
+    type: "audio"
+  - title: "Isolated Harmony (download)"
+    url: "https://drive.google.com/file/d/1ivSgIcpYFWP_Qa4NhnlQkdYrTaH3GiBK/view?usp=drive_link"
     type: "audio"
 
 ---
