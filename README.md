@@ -15,7 +15,7 @@ touch src/content/songs/2026/march-song-title.md
 
 2. Copy this template into the file:
 
-```yaml
+```markdown
 ---
 title: "Song Title"
 artist: "Artist Name"
@@ -28,9 +28,22 @@ youtubeUrl: "https://youtu.be/..."
 chordsUrl: "https://tabs.ultimate-guitar.com/..."
 printableUrl: "https://docs.google.com/..."
 spotifyUrl: "https://open.spotify.com/..."
+appleMusicUrl: "https://music.apple.com/..."
+coverImage: "/covers/2026-march-song.jpg"
+extras:
+  - title: "Isolated Harmony"
+    url: "https://drive.google.com/file/d/FILE_ID/view"
+    type: "audio"
 ---
 
-Optional notes about the song go here.
+```chordpro
+{Verse 1}
+[G]Here are the [C]lyrics with [D]chords above
+[G]Each chord goes in [Em]square brackets
+
+{Chorus}
+[C]Section headers use [G]curly braces
+```
 ```
 
 3. Deploy:
@@ -108,13 +121,53 @@ src/
 | `spotifyUrl` | No | Spotify link |
 | `appleMusicUrl` | No | Apple Music link |
 | `coverImage` | No | Path to cover art (e.g., "/covers/image.jpg") |
+| `extras` | No | Array of additional resources (see below) |
 
-## Adding Cover Art
+## Cover Art
 
-1. Add image to `public/covers/` (recommended: 400x400 JPG or WebP)
-2. Reference in frontmatter: `coverImage: "/covers/2026-march-song.jpg"`
+Cover art is displayed automatically in this priority:
 
-If no cover image is provided, a placeholder with the song title is displayed.
+1. **Custom image**: Set `coverImage: "/covers/2026-march-song.jpg"` and add the image to `public/covers/`
+2. **YouTube thumbnail**: Auto-fetched from `youtubeUrl` if no custom image is set
+3. **Placeholder**: Shows song title and artist on a gradient background
+
+For custom images, 400x400 JPG or WebP is recommended.
+
+## Adding Chords (ChordPro Format)
+
+Add a `chordpro` code block in the markdown body to display chords inline with lyrics:
+
+```markdown
+```chordpro
+{Verse 1}
+[G]Here are the [C]lyrics with [D]chords
+[Em]Chords appear [Am]above the [D]words
+
+{Chorus}
+[C]Use curly braces for [G]section headers
+```
+```
+
+The chords will be rendered with proper styling and alignment.
+
+## Adding Extras (Alternate Mixes, Isolated Tracks, etc.)
+
+Add an `extras` array in the frontmatter for additional audio/video resources:
+
+```yaml
+extras:
+  - title: "Isolated Harmony"
+    url: "https://drive.google.com/file/d/FILE_ID/view"
+    type: "audio"
+  - title: "Practice Video"
+    url: "https://drive.google.com/file/d/FILE_ID/view"
+    type: "video"
+```
+
+Supported sources:
+- **Google Drive**: Audio files get an embedded player; video files get an iframe
+- **SoundCloud**: Native embedded player
+- **Other URLs**: Shown as download links
 
 ## Tech Stack
 
