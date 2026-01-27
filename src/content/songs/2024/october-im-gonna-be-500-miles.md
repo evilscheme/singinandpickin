@@ -1,6 +1,6 @@
 ---
 title: "I'm Gonna Be (500 Miles)"
-artist: "Traditional"
+artist: "The Cleverlys"
 date: 2024-10-01
 month: "October"
 year: 2024

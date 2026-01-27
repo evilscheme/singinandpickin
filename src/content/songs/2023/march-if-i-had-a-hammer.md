@@ -1,6 +1,6 @@
 ---
 title: "If I Had A Hammer"
-artist: "Traditional"
+artist: "Peter Paul & Mary"
 date: 2023-03-01
 month: "March"
 year: 2023

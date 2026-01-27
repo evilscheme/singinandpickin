@@ -1,6 +1,6 @@
 ---
 title: "Coulda Been Me"
-artist: "Traditional"
+artist: "The Struts"
 date: 2023-05-01
 month: "May"
 year: 2023

@@ -1,6 +1,6 @@
 ---
 title: "Up Above my Head"
-artist: "Traditional"
+artist: "The Wood Brothers"
 date: 2023-11-01
 month: "November"
 year: 2023

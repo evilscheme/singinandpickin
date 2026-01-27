@@ -1,6 +1,6 @@
 ---
-title: "Find the River REM"
-artist: "Traditional"
+title: "Find the River"
+artist: "R.E.M."
 date: 2024-11-01
 month: "November"
 year: 2024

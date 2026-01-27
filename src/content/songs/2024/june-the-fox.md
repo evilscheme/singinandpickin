@@ -1,6 +1,6 @@
 ---
 title: "The Fox"
-artist: "Traditional"
+artist: "Nickel Creek"
 date: 2024-06-01
 month: "June"
 year: 2024

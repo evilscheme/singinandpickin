@@ -1,6 +1,6 @@
 ---
 title: "Jesus is on the Mainline"
-artist: "Traditional"
+artist: "Ry Cooder"
 date: 2023-04-01
 month: "April"
 year: 2023

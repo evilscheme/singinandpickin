@@ -1,6 +1,6 @@
 ---
 title: "Cast a Shadow"
-artist: "Traditional"
+artist: "Yo La Tengo"
 date: 2023-08-01
 month: "August"
 year: 2023

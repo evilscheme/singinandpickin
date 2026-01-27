@@ -1,6 +1,6 @@
 ---
 title: "Sweet Child O Mine"
-artist: "Traditional"
+artist: "Captain Fantastic (Guns 'n Roses)"
 date: 2024-02-01
 month: "February"
 year: 2024

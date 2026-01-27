@@ -1,6 +1,6 @@
 ---
 title: "Loves Me Like a Rock"
-artist: "Traditional"
+artist: "The Wailin' Jennies (Paul Simon)"
 date: 2024-03-01
 month: "March"
 year: 2024

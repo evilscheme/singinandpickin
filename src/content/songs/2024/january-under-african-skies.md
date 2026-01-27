@@ -1,6 +1,6 @@
 ---
 title: "Under African Skies"
-artist: "Traditional"
+artist: "Paul Simon"
 date: 2024-01-01
 month: "January"
 year: 2024

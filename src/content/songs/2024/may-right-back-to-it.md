@@ -1,6 +1,6 @@
 ---
 title: "Right Back To It"
-artist: "Traditional"
+artist: "Waxahatchee"
 date: 2024-05-01
 month: "May"
 year: 2024
