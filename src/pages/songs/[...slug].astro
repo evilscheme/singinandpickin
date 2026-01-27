@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import YouTubeEmbed from '../../components/YouTubeEmbed.astro';
-import ChordChart from '../../components/ChordChart.astro';
+import PlayAlongChordChart from '../../components/PlayAlongChordChart.astro';
 import StreamingLinks from '../../components/StreamingLinks.astro';
 import ExtrasSection from '../../components/ExtrasSection.astro';
 import { getCollection } from 'astro:content';
@@ -116,8 +116,7 @@ const placeholderBg = 'from-amber-600 to-amber-800';
     <!-- Chord Chart / Content -->
     {song.body && song.body.trim() && (
       <section class="mb-12">
-        <h2 class="font-serif text-2xl font-bold text-earth-900 mb-4">Chords & Lyrics</h2>
-        <ChordChart content={song.body} />
+        <PlayAlongChordChart content={song.body} title={song.data.title} songKey={song.data.key} />
       </section>
     )}
 
