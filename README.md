@@ -15,7 +15,7 @@ touch src/content/songs/2026/march-song-title.md
 
 2. Copy this template into the file:
 
-```markdown
+```yaml
 ---
 title: "Song Title"
 artist: "Artist Name"
@@ -44,7 +44,7 @@ extras:
 {Chorus}
 [C]Section headers use [G]curly braces
 ```
-```
+
 
 3. Deploy:
 
