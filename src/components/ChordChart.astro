@@ -65,7 +65,7 @@ function parseChordPro(text: string): string {
         case 'end_of_bridge':
           continue;
         default:
-          if (cmd.toLowerCase().includes('verse') || cmd.toLowerCase().includes('chorus') || cmd.toLowerCase().includes('bridge') || cmd.toLowerCase().includes('intro') || cmd.toLowerCase().includes('outro')) {
+          if (cmd.toLowerCase().includes('verse') || cmd.toLowerCase().includes('chorus') || cmd.toLowerCase().includes('bridge') || cmd.toLowerCase().includes('intro') || cmd.toLowerCase().includes('outro') || cmd.toLowerCase().includes('solo')) {
             html += `<div class="chordpro-section">${directive}</div>`;
           }
           continue;
