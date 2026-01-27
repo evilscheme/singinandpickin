@@ -87,8 +87,12 @@ function parseChordPro(text: string): string {
         const lyricsBefore = line.slice(lastChordEnd, match.index).replace(/\[([^\]]+)\]/g, '');
         lyricLine += lyricsBefore;
 
-        // Pad chord line to match lyric position
-        while (chordLine.length < lyricLine.length) {
+        // Pad chord line to match lyric position, with minimum spacing between chords
+        const minChordSpacing = 2;
+        const targetPos = chordLine.length > 0
+          ? Math.max(chordLine.length + minChordSpacing, lyricLine.length)
+          : lyricLine.length;
+        while (chordLine.length < targetPos) {
           chordLine += ' ';
         }
 
