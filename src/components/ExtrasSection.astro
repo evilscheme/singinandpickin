@@ -2,7 +2,7 @@
 interface Extra {
   title: string;
   url: string;
-  type: 'audio' | 'video';
+  type: 'audio' | 'video' | 'youtube';
 }
 
 interface Props {
@@ -19,6 +19,18 @@ function getGoogleDriveEmbedUrl(url: string): string | null {
   return null;
 }
 
+function getYouTubeEmbedUrl(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+    /youtube\.com\/shorts\/([^&\n?#]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return `https://www.youtube-nocookie.com/embed/${match[1]}`;
+  }
+  return null;
+}
+
 function getSoundCloudEmbedUrl(url: string): string | null {
   if (url.includes('soundcloud.com')) {
     return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23d97706&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
@@ -26,7 +38,11 @@ function getSoundCloudEmbedUrl(url: string): string | null {
   return null;
 }
 
-function getEmbedInfo(extra: Extra): { type: 'gdrive-video' | 'soundcloud' | 'direct'; url: string } {
+function getEmbedInfo(extra: Extra): { type: 'youtube' | 'gdrive-video' | 'soundcloud' | 'direct'; url: string } {
+  if (extra.url.includes('youtube.com') || extra.url.includes('youtu.be')) {
+    const embedUrl = getYouTubeEmbedUrl(extra.url);
+    if (embedUrl) return { type: 'youtube', url: embedUrl };
+  }
   if (extra.url.includes('drive.google.com')) {
     if (extra.type === 'video') {
       return { type: 'gdrive-video', url: getGoogleDriveEmbedUrl(extra.url)! };
@@ -50,6 +66,21 @@ function getEmbedInfo(extra: Extra): { type: 'gdrive-video' | 'soundcloud' | 'di
         return (
           <div class="bg-earth-100 rounded-xl p-4 border border-earth-200">
             <h3 class="font-medium text-earth-800 mb-3">{extra.title}</h3>
+
+            {embed.type === 'youtube' && (
+              <div class="max-w-md">
+                <div class="aspect-video rounded-lg overflow-hidden bg-earth-200">
+                  <iframe
+                    src={embed.url}
+                    title={extra.title}
+                    class="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy"
+                  ></iframe>
+                </div>
+              </div>
+            )}
 
             {embed.type === 'gdrive-video' && (
               <div class="aspect-video rounded-lg overflow-hidden">

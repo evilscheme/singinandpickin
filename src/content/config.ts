@@ -3,7 +3,7 @@ import { defineCollection, z } from 'astro:content';
 const extrasSchema = z.object({
   title: z.string(),
   url: z.string().url(),
-  type: z.enum(['audio', 'video']).default('audio'),
+  type: z.enum(['audio', 'video', 'youtube']).default('audio'),
 });
 
 const songsCollection = defineCollection({
