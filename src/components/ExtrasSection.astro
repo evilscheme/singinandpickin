@@ -11,18 +11,6 @@ interface Props {
 
 const { extras } = Astro.props;
 
-/**
- * Convert Google Drive sharing URL to direct/embed URL
- */
-function getGoogleDriveDirectUrl(url: string): string | null {
-  // Match Google Drive file URLs
-  const match = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
-  if (match) {
-    return `https://drive.google.com/uc?export=download&id=${match[1]}`;
-  }
-  return null;
-}
-
 function getGoogleDriveEmbedUrl(url: string): string | null {
   const match = url.match(/drive\.google\.com\/file\/d\/([^/]+)/);
   if (match) {
@@ -38,12 +26,13 @@ function getSoundCloudEmbedUrl(url: string): string | null {
   return null;
 }
 
-function getEmbedInfo(extra: Extra): { type: 'gdrive-audio' | 'gdrive-video' | 'soundcloud' | 'direct'; url: string } {
+function getEmbedInfo(extra: Extra): { type: 'gdrive-video' | 'soundcloud' | 'direct'; url: string } {
   if (extra.url.includes('drive.google.com')) {
     if (extra.type === 'video') {
       return { type: 'gdrive-video', url: getGoogleDriveEmbedUrl(extra.url)! };
     }
-    return { type: 'gdrive-audio', url: getGoogleDriveDirectUrl(extra.url)! };
+    // Audio from Google Drive → download link (streaming doesn't work due to CORS/auth)
+    return { type: 'direct', url: extra.url };
   }
   if (extra.url.includes('soundcloud.com')) {
     return { type: 'soundcloud', url: getSoundCloudEmbedUrl(extra.url)! };
@@ -61,15 +50,6 @@ function getEmbedInfo(extra: Extra): { type: 'gdrive-audio' | 'gdrive-video' | '
         return (
           <div class="bg-earth-100 rounded-xl p-4 border border-earth-200">
             <h3 class="font-medium text-earth-800 mb-3">{extra.title}</h3>
-
-            {embed.type === 'gdrive-audio' && (
-              <audio controls class="w-full" preload="metadata">
-                <source src={embed.url} />
-                <a href={extra.url} target="_blank" rel="noopener noreferrer" class="text-amber-700 hover:underline">
-                  Download audio
-                </a>
-              </audio>
-            )}
 
             {embed.type === 'gdrive-video' && (
               <div class="aspect-video rounded-lg overflow-hidden">
