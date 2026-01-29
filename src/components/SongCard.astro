@@ -11,48 +11,70 @@ interface Props {
   coverImage?: string;
   youtubeUrl?: string;
   compact?: boolean;
+  animationDelay?: number;
 }
 
-const { title, artist, month, year, picker, slug, coverImage, youtubeUrl, compact = false } = Astro.props;
+const { title, artist, month, year, picker, slug, coverImage, youtubeUrl, compact = false, animationDelay = 0 } = Astro.props;
 
 // Use coverImage if provided, otherwise try YouTube thumbnail
 const displayImage = coverImage || (youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : null);
 
-const placeholderBg = [
-  'from-amber-600 to-amber-800',
-  'from-sage-600 to-sage-800',
-  'from-earth-600 to-earth-800',
-][Math.abs(title.length + artist.length) % 3];
+// Different gradient combinations for visual variety
+const placeholderGradients = [
+  'from-amber-500 via-amber-600 to-amber-700',
+  'from-sage-500 via-sage-600 to-sage-700',
+  'from-earth-500 via-earth-600 to-earth-700',
+];
+const gradientIndex = Math.abs(title.length + artist.length) % 3;
+const placeholderBg = placeholderGradients[gradientIndex];
+
+// Determine delay class for staggered animations
+const delayClass = animationDelay > 0 ? `delay-${Math.min(animationDelay, 4)}` : '';
 ---
 
-<a href={`/songs/${slug}`} class="card group block">
-  <div class="aspect-square relative overflow-hidden bg-gradient-to-br {placeholderBg}">
+<a
+  href={`/songs/${slug}`}
+  class={`card-enhanced group block animate-on-scroll ${delayClass}`}
+  style={animationDelay > 4 ? `animation-delay: ${animationDelay * 0.1}s` : ''}
+>
+  <div class="aspect-square relative overflow-hidden">
     {displayImage ? (
       <img
         src={displayImage}
         alt={`${title} by ${artist}`}
-        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        class="w-full h-full object-cover transition-all duration-300"
         loading="lazy"
       />
     ) : (
-      <div class={`w-full h-full flex flex-col items-center justify-center p-4 text-white bg-gradient-to-br ${placeholderBg}`}>
-        <span class="text-4xl mb-2" aria-hidden="true">🎵</span>
-        <span class="font-serif text-center text-lg font-medium leading-tight">{title}</span>
-        <span class="text-sm opacity-80 mt-1">{artist}</span>
+      <div class={`w-full h-full flex flex-col items-center justify-center p-4 text-white bg-gradient-to-br ${placeholderBg} shimmer-bg relative`}>
+        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+        <span class="text-5xl mb-3 drop-shadow-lg relative z-10" aria-hidden="true">🎵</span>
+        <span class="font-serif text-center text-lg font-medium leading-tight relative z-10 drop-shadow">{title}</span>
+        <span class="text-sm opacity-90 mt-1 relative z-10">{artist}</span>
       </div>
     )}
-    <div class="absolute top-2 right-2 bg-earth-900/80 text-amber-400 text-xs font-medium px-2 py-1 rounded">
+
+    <!-- Badge with backdrop blur -->
+    <div class="absolute top-3 right-3 bg-earth-900/70 backdrop-blur-md text-amber-400 text-xs font-semibold px-3 py-1.5 rounded-full border border-earth-700/50 shadow-lg">
       {month.slice(0, 3)} {year}
     </div>
+
+    <!-- Hover overlay -->
+    <div class="absolute inset-0 bg-gradient-to-t from-earth-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
   </div>
 
   {!compact && (
-    <div class="p-4">
+    <div class="p-4 relative">
       <h3 class="font-serif text-lg font-semibold text-earth-900 group-hover:text-amber-700 transition-colors truncate">
         {title}
       </h3>
       <p class="text-earth-600 text-sm truncate">{artist}</p>
-      <p class="text-earth-400 text-xs mt-2">Picked by {picker}</p>
+      <p class="text-earth-400 text-xs mt-2 flex items-center gap-1">
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+        Picked by {picker}
+      </p>
     </div>
   )}
 </a>

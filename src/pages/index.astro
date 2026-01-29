@@ -35,21 +35,26 @@ const recentSongs = sortedSongs.slice(1, 5);
     />
   )}
 
+  <!-- Section divider -->
+  <div class="section-divider bg-earth-100">
+    <span class="section-divider-icon">🎶</span>
+  </div>
+
   <!-- Recent Songs Section -->
   <section class="py-16 bg-earth-100">
     <div class="max-w-6xl mx-auto px-4">
-      <div class="flex items-center justify-between mb-8">
-        <h2 class="font-serif text-3xl font-bold text-earth-900">Recent Songs</h2>
-        <a href="/archive" class="text-amber-700 hover:text-amber-800 font-medium flex items-center gap-2">
+      <div class="flex items-center justify-between mb-10 animate-on-scroll">
+        <h2 class="font-serif text-3xl md:text-4xl font-bold text-earth-900">Recent Songs</h2>
+        <a href="/archive" class="text-amber-700 hover:text-amber-800 font-medium flex items-center gap-2 hover-lift px-4 py-2 rounded-lg hover:bg-amber-50 transition-colors">
           View All
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </a>
       </div>
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {recentSongs.map((song) => {
+        {recentSongs.map((song, index) => {
           const songSlug = `${song.data.year}/${song.slug.split('/').pop()}`;
           return (
             <SongCard
@@ -61,6 +66,7 @@ const recentSongs = sortedSongs.slice(1, 5);
               slug={songSlug}
               coverImage={song.data.coverImage}
               youtubeUrl={song.data.youtubeUrl}
+              animationDelay={index + 1}
             />
           );
         })}
@@ -69,10 +75,15 @@ const recentSongs = sortedSongs.slice(1, 5);
   </section>
 
   <!-- About Section -->
-  <section class="py-16 bg-earth-50">
-    <div class="max-w-4xl mx-auto px-4 text-center">
-      <h2 class="font-serif text-3xl font-bold text-earth-900 mb-4">About Our Gathering</h2>
-      <p class="text-earth-600 text-lg leading-relaxed">
+  <section class="py-20 bg-gradient-to-b from-earth-50 to-earth-100">
+    <div class="max-w-4xl mx-auto px-4 text-center animate-on-scroll">
+      <div class="mb-6">
+        <svg class="w-12 h-12 mx-auto text-amber-500/50" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+        </svg>
+      </div>
+      <h2 class="font-serif text-3xl md:text-4xl font-bold text-earth-900 mb-6">About Our Gathering</h2>
+      <p class="text-earth-600 text-lg md:text-xl leading-relaxed">
         Each month, our group gathers to sing and play music together. One person picks a song,
         and we all learn it for our monthly get-together. This site is our songbook—a growing
         collection of the tunes we've shared over the years.

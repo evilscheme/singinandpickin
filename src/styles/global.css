@@ -86,3 +86,135 @@
 .chordpro-section {
   @apply text-sage-700 font-semibold text-sm uppercase tracking-wide mt-6 mb-2;
 }
+
+/* Scroll-triggered animations */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.animate-on-scroll.is-visible {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Staggered delays for card grids */
+.animate-on-scroll.delay-1 { animation-delay: 0.1s; }
+.animate-on-scroll.delay-2 { animation-delay: 0.2s; }
+.animate-on-scroll.delay-3 { animation-delay: 0.3s; }
+.animate-on-scroll.delay-4 { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover lift effect for buttons */
+.hover-lift {
+  @apply transition-all duration-200;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  @apply shadow-lg;
+}
+
+/* Enhanced card styling */
+.card-enhanced {
+  @apply bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300;
+  border-left: 3px solid transparent;
+}
+
+.card-enhanced:hover {
+  @apply shadow-xl;
+  transform: scale(1.02);
+  border-left-color: theme('colors.amber.500');
+}
+
+.card-enhanced:hover img {
+  filter: brightness(1.05);
+}
+
+/* Shimmer effect for placeholders */
+.shimmer-bg {
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Gradient border effect */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  padding: 3px;
+  background: linear-gradient(135deg, theme('colors.amber.400'), theme('colors.amber.600'), theme('colors.amber.400'));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+/* Animated underline for nav links */
+.nav-link-animated {
+  position: relative;
+}
+
+.nav-link-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: theme('colors.amber.400');
+  transition: width 0.3s ease;
+}
+
+.nav-link-animated:hover::after {
+  width: 100%;
+}
+
+/* Section divider */
+.section-divider {
+  @apply flex items-center justify-center my-12;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  @apply flex-1 h-px bg-gradient-to-r;
+}
+
+.section-divider::before {
+  @apply from-transparent to-earth-300;
+}
+
+.section-divider::after {
+  @apply from-earth-300 to-transparent;
+}
+
+.section-divider-icon {
+  @apply mx-4 text-earth-400 text-xl;
+}
