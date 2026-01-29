@@ -3,6 +3,29 @@ export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
+      animation: {
+        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+        'shimmer': 'shimmer 2s linear infinite',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+      },
+      keyframes: {
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        pulseGlow: {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(217, 119, 6, 0.3)' },
+          '50%': { boxShadow: '0 0 40px rgba(217, 119, 6, 0.5)' },
+        },
+      },
+      boxShadow: {
+        'glow-amber': '0 0 20px rgba(217, 119, 6, 0.3)',
+        'glow-amber-lg': '0 0 40px rgba(217, 119, 6, 0.5)',
+      },
       colors: {
         // Warm amber/honey tones
         amber: {
