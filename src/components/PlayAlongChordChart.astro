@@ -16,7 +16,7 @@ const { content, title, songKey } = Astro.props;
     <h2 class="font-serif text-2xl font-bold text-earth-900">Chords & Lyrics</h2>
     <button
       id="enter-play-along"
-      class="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-colors font-medium"
+      class="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white rounded-lg transition-colors font-medium"
     >
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
@@ -26,19 +26,19 @@ const { content, title, songKey } = Astro.props;
     </button>
   </div>
 
-  <!-- Fullscreen Container -->
+  <!-- Play Along Container -->
   <div id="play-along-container" class="play-along-container">
-    <!-- Header (visible in fullscreen) -->
+    <!-- Header (visible in play-along mode) -->
     <div id="play-along-header" class="play-along-header hidden">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-2xl font-serif font-bold text-white">{title}</h1>
-          {songKey && <span class="text-amber-300">Key: {songKey}</span>}
+          <h1 class="text-xl sm:text-2xl font-serif font-bold text-white">{title}</h1>
+          {songKey && <span class="text-amber-300 text-sm">Key: {songKey}</span>}
         </div>
         <button
           id="exit-play-along"
-          class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-          title="Exit Play Along (Esc)"
+          class="p-3 text-white/80 hover:text-white active:text-white rounded-lg transition-colors"
+          title="Exit (Esc)"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -47,33 +47,42 @@ const { content, title, songKey } = Astro.props;
       </div>
     </div>
 
-    <!-- Scrollable Chord Content -->
+    <!-- Scrollable Content -->
     <div id="play-along-content" class="play-along-content">
       <ChordChart content={content} />
     </div>
 
-    <!-- Control Bar (visible in fullscreen) -->
+    <!-- Fixed Control Bar (visible in play-along mode) -->
     <div id="play-along-controls" class="play-along-controls hidden">
-      <div class="flex items-center justify-center gap-6">
-        <!-- Play/Pause Button -->
-        <button
-          id="play-pause-btn"
-          class="p-3 bg-amber-600 hover:bg-amber-700 text-white rounded-full transition-colors"
-          title="Play/Pause (Space)"
-        >
-          <svg id="play-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-          </svg>
-          <svg id="pause-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"/>
-          </svg>
-        </button>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+        <!-- Play/Pause and Restart -->
+        <div class="flex items-center gap-4">
+          <button
+            id="play-pause-btn"
+            class="p-4 sm:p-3 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white rounded-full transition-colors"
+            title="Play/Pause (Space)"
+          >
+            <svg id="play-icon" class="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            </svg>
+            <svg id="pause-icon" class="w-7 h-7 sm:w-6 sm:h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"/>
+            </svg>
+          </button>
+
+          <button
+            id="restart-btn"
+            class="p-3 text-white/80 hover:text-white active:text-white rounded-lg transition-colors"
+            title="Restart (R)"
+          >
+            <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+          </button>
+        </div>
 
         <!-- Speed Control -->
         <div class="flex items-center gap-3 bg-earth-800/50 px-4 py-2 rounded-full">
-          <svg class="w-4 h-4 text-earth-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
           <label for="speed-slider" class="text-white/80 text-sm">Speed:</label>
           <input
             type="range"
@@ -85,94 +94,94 @@ const { content, title, songKey } = Astro.props;
           />
           <span id="speed-value" class="text-white font-mono text-sm w-6">3</span>
         </div>
-
-        <!-- Restart Button -->
-        <button
-          id="restart-btn"
-          class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-          title="Restart (R)"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-          </svg>
-        </button>
       </div>
     </div>
   </div>
 </div>
 
 <style>
+  /* Base container - normal view */
   .play-along-container {
     @apply relative bg-amber-50 rounded-lg;
   }
 
-  .play-along-container:fullscreen,
-  .play-along-container:-webkit-full-screen {
-    @apply bg-earth-900 flex flex-col;
-    padding: 0;
-  }
-
   .play-along-header {
-    @apply sticky top-0 z-10 px-6 py-4 bg-earth-900/95 backdrop-blur border-b border-earth-700;
-  }
-
-  .play-along-container:fullscreen .play-along-header,
-  .play-along-container:-webkit-full-screen .play-along-header {
-    @apply block;
+    @apply px-4 sm:px-6 py-4 bg-earth-900 border-b border-earth-700;
   }
 
   .play-along-content {
     @apply p-6 overflow-auto;
   }
 
-  .play-along-container:fullscreen .play-along-content,
-  .play-along-container:-webkit-full-screen .play-along-content {
-    @apply flex-1 px-8 py-6;
-    scroll-behavior: smooth;
-  }
-
-  .play-along-container:fullscreen .play-along-content :global(.chord-chart),
-  .play-along-container:-webkit-full-screen .play-along-content :global(.chord-chart) {
-    @apply max-w-3xl mx-auto text-lg;
-  }
-
-  .play-along-container:fullscreen .play-along-content :global(.chordpro-chord),
-  .play-along-container:-webkit-full-screen .play-along-content :global(.chordpro-chord) {
-    @apply text-amber-400 text-xl;
-  }
-
-  .play-along-container:fullscreen .play-along-content :global(.chordpro-lyrics),
-  .play-along-container:-webkit-full-screen .play-along-content :global(.chordpro-lyrics) {
-    @apply text-white text-xl;
-  }
-
-  .play-along-container:fullscreen .play-along-content :global(.chordpro-section),
-  .play-along-container:-webkit-full-screen .play-along-content :global(.chordpro-section) {
-    @apply text-amber-500 text-lg font-bold;
-  }
-
+  /* Controls are always fixed when visible - avoids iOS scroll capture issues */
   .play-along-controls {
-    @apply sticky bottom-0 z-10 px-6 py-4 bg-earth-900/95 backdrop-blur border-t border-earth-700;
+    @apply px-4 sm:px-6 py-4 bg-earth-900/95 backdrop-blur border-t border-earth-700;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
   }
 
-  .play-along-container:fullscreen .play-along-controls,
-  .play-along-container:-webkit-full-screen .play-along-controls {
+  /* Play-along active mode (works on all devices including iOS) */
+  .play-along-container.active {
+    @apply fixed inset-0 z-50 bg-earth-900 flex flex-col;
+    border-radius: 0;
+  }
+
+  .play-along-container.active .play-along-header {
     @apply block;
   }
 
-  /* Scrollbar styling in fullscreen */
-  .play-along-container:fullscreen .play-along-content::-webkit-scrollbar,
-  .play-along-container:-webkit-full-screen .play-along-content::-webkit-scrollbar {
+  .play-along-container.active .play-along-content {
+    @apply flex-1 px-4 sm:px-8 py-6;
+    padding-bottom: 100px; /* Space for fixed controls */
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Dark mode text colors for play-along */
+  .play-along-container.active .play-along-content :global(.chord-chart) {
+    @apply bg-transparent border-0 text-base sm:text-lg;
+  }
+
+  .play-along-container.active .play-along-content :global(.chordpro-line) {
+    @apply text-white text-lg sm:text-xl;
+    line-height: 2.6;
+    padding-top: 1.4em;
+  }
+
+  .play-along-container.active .play-along-content :global(.chord-word .chord) {
+    @apply text-amber-400 text-lg sm:text-xl;
+    top: -1.4em;
+  }
+
+  .play-along-container.active .play-along-content :global(.chord-text),
+  .play-along-container.active .play-along-content :global(.chordpro-lyrics) {
+    @apply text-white;
+  }
+
+  .play-along-container.active .play-along-content :global(.chordpro-section) {
+    @apply text-amber-500 text-base sm:text-lg font-bold;
+  }
+
+  .play-along-container.active .play-along-controls {
+    @apply block;
+  }
+
+  /* Prevent body scroll when active */
+  :global(body.play-along-open) {
+    overflow: hidden;
+  }
+
+  /* Scrollbar styling */
+  .play-along-container.active .play-along-content::-webkit-scrollbar {
     width: 8px;
   }
-
-  .play-along-container:fullscreen .play-along-content::-webkit-scrollbar-track,
-  .play-along-container:-webkit-full-screen .play-along-content::-webkit-scrollbar-track {
+  .play-along-container.active .play-along-content::-webkit-scrollbar-track {
     @apply bg-earth-800;
   }
-
-  .play-along-container:fullscreen .play-along-content::-webkit-scrollbar-thumb,
-  .play-along-container:-webkit-full-screen .play-along-content::-webkit-scrollbar-thumb {
+  .play-along-container.active .play-along-content::-webkit-scrollbar-thumb {
     @apply bg-earth-600 rounded;
   }
 </style>
@@ -196,15 +205,14 @@ const { content, title, songKey } = Astro.props;
     let scrollInterval: number | null = null;
     let speed = 3;
     let scrollAccumulator = 0;
+    let isActive = false;
 
-    // Speed mapping: slider value (1-10) to pixels per 50ms
-    function getScrollSpeed(sliderValue: number): number {
-      return 0.2 + (sliderValue - 1) * 0.3;
+    function getScrollSpeed(val: number): number {
+      return 0.2 + (val - 1) * 0.3;
     }
 
     function startScrolling() {
       if (scrollInterval) return;
-
       isPlaying = true;
       scrollAccumulator = 0;
       playIcon?.classList.add('hidden');
@@ -212,17 +220,12 @@ const { content, title, songKey } = Astro.props;
 
       scrollInterval = window.setInterval(() => {
         if (content) {
-          // Accumulate fractional scroll amounts
           scrollAccumulator += getScrollSpeed(speed);
-
-          // Only scroll when we have at least 1 pixel
           if (scrollAccumulator >= 1) {
-            const pixelsToScroll = Math.floor(scrollAccumulator);
-            content.scrollTop += pixelsToScroll;
-            scrollAccumulator -= pixelsToScroll;
+            const px = Math.floor(scrollAccumulator);
+            content.scrollTop += px;
+            scrollAccumulator -= px;
           }
-
-          // Stop at the end
           if (content.scrollTop + content.clientHeight >= content.scrollHeight) {
             stopScrolling();
           }
@@ -234,7 +237,6 @@ const { content, title, songKey } = Astro.props;
       isPlaying = false;
       playIcon?.classList.remove('hidden');
       pauseIcon?.classList.add('hidden');
-
       if (scrollInterval) {
         clearInterval(scrollInterval);
         scrollInterval = null;
@@ -242,47 +244,30 @@ const { content, title, songKey } = Astro.props;
     }
 
     function togglePlayPause() {
-      if (isPlaying) {
-        stopScrolling();
-      } else {
-        startScrolling();
-      }
+      isPlaying ? stopScrolling() : startScrolling();
     }
 
-    function enterFullscreen() {
-      if (container?.requestFullscreen) {
-        container.requestFullscreen();
-      } else if ((container as any)?.webkitRequestFullscreen) {
-        (container as any).webkitRequestFullscreen();
-      }
+    function activate() {
+      isActive = true;
+      container?.classList.add('active');
+      document.body.classList.add('play-along-open');
+      header?.classList.remove('hidden');
+      controls?.classList.remove('hidden');
     }
 
-    function exitFullscreen() {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        (document as any).webkitExitFullscreen();
-      }
-    }
-
-    function handleFullscreenChange() {
-      const isFullscreen = document.fullscreenElement === container ||
-                           (document as any).webkitFullscreenElement === container;
-
-      if (isFullscreen) {
-        header?.classList.remove('hidden');
-        controls?.classList.remove('hidden');
-      } else {
-        header?.classList.add('hidden');
-        controls?.classList.add('hidden');
-        stopScrolling();
-        if (content) content.scrollTop = 0;
-      }
+    function deactivate() {
+      isActive = false;
+      container?.classList.remove('active');
+      document.body.classList.remove('play-along-open');
+      header?.classList.add('hidden');
+      controls?.classList.add('hidden');
+      stopScrolling();
+      if (content) content.scrollTop = 0;
     }
 
     // Event listeners
-    enterBtn?.addEventListener('click', enterFullscreen);
-    exitBtn?.addEventListener('click', exitFullscreen);
+    enterBtn?.addEventListener('click', activate);
+    exitBtn?.addEventListener('click', deactivate);
     playPauseBtn?.addEventListener('click', togglePlayPause);
 
     restartBtn?.addEventListener('click', () => {
@@ -290,20 +275,22 @@ const { content, title, songKey } = Astro.props;
       stopScrolling();
     });
 
-    speedSlider?.addEventListener('input', (e) => {
-      speed = parseInt((e.target as HTMLInputElement).value);
+    speedSlider?.addEventListener('input', () => {
+      speed = parseInt(speedSlider.value);
       if (speedValue) speedValue.textContent = speed.toString();
     });
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    // Tap content to toggle play/pause (mobile convenience)
+    content?.addEventListener('click', (e) => {
+      if (!isActive) return;
+      const target = e.target as HTMLElement;
+      if (target.closest('button, input, a')) return;
+      togglePlayPause();
+    });
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
-      const isFullscreen = document.fullscreenElement === container ||
-                           (document as any).webkitFullscreenElement === container;
-
-      if (!isFullscreen) return;
+      if (!isActive) return;
 
       switch (e.key) {
         case ' ':
@@ -311,7 +298,7 @@ const { content, title, songKey } = Astro.props;
           togglePlayPause();
           break;
         case 'Escape':
-          stopScrolling();
+          deactivate();
           break;
         case 'r':
         case 'R':
