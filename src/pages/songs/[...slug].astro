@@ -74,18 +74,18 @@ const placeholderBg = 'from-amber-600 to-amber-800';
           </h1>
           <p class="text-2xl text-earth-600 mb-4">{song.data.artist}</p>
 
-          <dl class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-6">
-            <div>
+          <dl class="flex flex-wrap justify-center md:justify-start gap-6 text-sm mb-6">
+            <div class="text-center md:text-left">
               <dt class="section-header">Month</dt>
               <dd class="text-earth-800 font-medium">{song.data.month} {song.data.year}</dd>
             </div>
             {song.data.key && (
-              <div>
+              <div class="text-center md:text-left">
                 <dt class="section-header">Key</dt>
                 <dd class="text-earth-800 font-medium">{song.data.key}</dd>
               </div>
             )}
-            <div>
+            <div class="text-center md:text-left">
               <dt class="section-header">Picker</dt>
               <dd class="text-earth-800 font-medium">{song.data.picker}</dd>
             </div>
