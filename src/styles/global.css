@@ -40,7 +40,7 @@
   }
 
   .chord-chart {
-    @apply font-mono text-sm leading-relaxed bg-earth-100 p-6 rounded-xl border border-earth-200;
+    @apply font-mono text-sm leading-relaxed bg-earth-100 p-3 sm:p-6 rounded-xl border border-earth-200;
   }
 
   .chord {
@@ -68,9 +68,9 @@
 }
 
 .chordpro-line {
-  @apply mb-2;
-  padding-top: 1.4em;
-  line-height: 2.6;
+  @apply mb-1;
+  padding-top: 1.2em;
+  /* line-height: 2.2; */
 }
 
 .chord-word {
@@ -81,7 +81,7 @@
 .chord-word .chord {
   @apply text-amber-700 font-bold;
   position: absolute;
-  top: -1.6em;
+  top: -1.4em;
   left: 0;
   white-space: nowrap;
 }
@@ -112,11 +112,11 @@
     @apply text-xs;
   }
   .chordpro-line {
-    padding-top: 1.2em;
-    line-height: 2.4;
+    padding-top: 1.0em;
+    /* line-height: 2.0; */
   }
   .chord-word .chord {
-    top: -1.4em;
+    top: -1.2em;
   }
 }
 
