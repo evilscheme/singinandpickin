@@ -62,7 +62,7 @@ function parseChordPro(text: string): string {
         case 'end_of_bridge':
           continue;
         default:
-          if (/verse|chorus|bridge|intro|outro|solo/i.test(cmd)) {
+          if (/verse|chorus|bridge|intro|outro|solo|interlude/i.test(cmd)) {
             html += `<div class="chordpro-section">${directive}</div>`;
           }
           continue;
