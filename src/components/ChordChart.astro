@@ -39,6 +39,9 @@ function parseChordPro(text: string): string {
         case 'c':
           html += `<div class="chordpro-comment">${value}</div>`;
           continue;
+        case 'capo':
+          html += `<div class="chordpro-capo">Capo: ${value}</div>`;
+          continue;
         case 'soc':
         case 'start_of_chorus':
           html += `<div class="chordpro-section">Chorus</div><div class="pl-4 border-l-4 border-amber-400">`;
@@ -79,32 +82,50 @@ function parseChordPro(text: string): string {
         chords.push({ chord: match[1], index: match.index, length: match[0].length });
       }
 
-      let lineHtml = '<div class="chordpro-line">';
+      // Check if this is a chord-only line (no real lyrics, just chords + optional annotations)
+      const lyricsText = line.replace(/\[[^\]]+\]/g, '').replace(/\(.*?\)/g, '').trim();
+      const isChordOnlyLine = lyricsText === '';
 
-      for (let i = 0; i < chords.length; i++) {
-        const { chord, index, length } = chords[i];
-        const nextIndex = i < chords.length - 1 ? chords[i + 1].index : line.length;
+      if (isChordOnlyLine && chords.length > 0) {
+        // Render chords inline without absolute positioning
+        let lineHtml = '<div class="chordpro-line chordpro-chords-only">';
+        for (const { chord } of chords) {
+          lineHtml += `<span class="chord-inline">${chord}</span>`;
+        }
+        const annotation = line.replace(/\[[^\]]+\]/g, '').trim();
+        if (annotation) {
+          lineHtml += `<span class="chord-annotation">${annotation}</span>`;
+        }
+        lineHtml += '</div>';
+        html += lineHtml;
+      } else {
+        let lineHtml = '<div class="chordpro-line">';
 
-        // Text before first chord
-        if (i === 0 && index > 0) {
-          const textBefore = line.slice(0, index);
-          if (textBefore) {
-            lineHtml += `<span class="chord-text">${textBefore}</span>`;
+        for (let i = 0; i < chords.length; i++) {
+          const { chord, index, length } = chords[i];
+          const nextIndex = i < chords.length - 1 ? chords[i + 1].index : line.length;
+
+          // Text before first chord
+          if (i === 0 && index > 0) {
+            const textBefore = line.slice(0, index);
+            if (textBefore) {
+              lineHtml += `<span class="chord-text">${textBefore}</span>`;
+            }
+          }
+
+          // Text following this chord
+          const textAfter = line.slice(index + length, nextIndex).replace(/\[([^\]]+)\]/g, '');
+
+          if (textAfter) {
+            lineHtml += `<span class="chord-word"><span class="chord">${chord}</span>${textAfter}</span>`;
+          } else {
+            lineHtml += `<span class="chord-word chord-only"><span class="chord">${chord}</span></span>`;
           }
         }
 
-        // Text following this chord
-        const textAfter = line.slice(index + length, nextIndex).replace(/\[([^\]]+)\]/g, '');
-
-        if (textAfter) {
-          lineHtml += `<span class="chord-word"><span class="chord">${chord}</span>${textAfter}</span>`;
-        } else {
-          lineHtml += `<span class="chord-word chord-only"><span class="chord">${chord}</span></span>`;
-        }
+        lineHtml += '</div>';
+        html += chords.length > 0 ? lineHtml : '<div class="h-4"></div>';
       }
-
-      lineHtml += '</div>';
-      html += chords.length > 0 ? lineHtml : '<div class="h-4"></div>';
     } else if (line.trim()) {
       html += `<div class="chordpro-lyrics">${line}</div>`;
     } else {

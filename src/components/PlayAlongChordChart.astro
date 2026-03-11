@@ -156,6 +156,14 @@ const { content, title, songKey } = Astro.props;
     top: -1.4em;
   }
 
+  .play-along-container.active .play-along-content :global(.chord-inline) {
+    @apply text-amber-400 text-lg sm:text-xl;
+  }
+
+  .play-along-container.active .play-along-content :global(.chord-annotation) {
+    @apply text-white/60;
+  }
+
   .play-along-container.active .play-along-content :global(.chord-text),
   .play-along-container.active .play-along-content :global(.chordpro-lyrics) {
     @apply text-white;

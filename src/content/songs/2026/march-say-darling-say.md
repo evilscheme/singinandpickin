@@ -12,7 +12,7 @@ chordsUrl: "https://tabs.ultimate-guitar.com/tab/rayna-gellert/say-darlin-say-ch
 
 ```chordpro
 {Intro}
-[D]-----[G]-----[D]-----[A]-----[D]
+[D] [G] [D] [A] [D]
 
 {Verse 1}
 [D]Hush little darlin' don’t say a [G]word

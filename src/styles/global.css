@@ -87,7 +87,22 @@
 }
 
 .chord-only {
+  display: inline-block;
+  min-width: 2.5em;
   padding-right: 0.5em;
+}
+
+.chordpro-chords-only {
+  padding-top: 0;
+}
+
+.chord-inline {
+  @apply text-amber-700 font-bold;
+  margin-right: 1em;
+}
+
+.chord-annotation {
+  @apply text-earth-600;
 }
 
 .chord-text {
@@ -100,6 +115,10 @@
 
 .chordpro-comment {
   @apply text-sage-600 italic text-sm;
+}
+
+.chordpro-capo {
+  @apply text-amber-700 font-semibold text-sm mb-2;
 }
 
 .chordpro-section {
