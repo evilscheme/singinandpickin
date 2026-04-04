@@ -64,7 +64,7 @@ const allYears = [...new Set(allSongs.map((s) => s.data.year))].sort((a, b) => b
     <!-- Songs Grid -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {songs.map((song) => {
-        const songSlug = `${song.data.year}/${song.slug.split('/').pop()}`;
+        const songSlug = `${song.data.year}/${song.id.split('/').pop()}`;
         return (
           <SongCard
             title={song.data.title}

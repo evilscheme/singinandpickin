@@ -11,7 +11,7 @@ export async function getStaticPaths() {
   const songs = await getCollection('songs');
 
   return songs.map((song) => ({
-    params: { slug: `${song.data.year}/${song.slug.split('/').pop()}` },
+    params: { slug: `${song.data.year}/${song.id.split('/').pop()}` },
     props: { song },
   }));
 }
@@ -25,7 +25,7 @@ const { song } = Astro.props;
 // Get all songs for prev/next navigation
 const allSongs = await getCollection('songs');
 const sortedSongs = allSongs.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const currentIndex = sortedSongs.findIndex((s) => s.slug === song.slug);
+const currentIndex = sortedSongs.findIndex((s) => s.id === song.id);
 const prevSong = sortedSongs[currentIndex + 1];
 const nextSong = sortedSongs[currentIndex - 1];
 
@@ -125,7 +125,7 @@ const placeholderBg = 'from-amber-600 to-amber-800';
       <div class="flex justify-between">
         {prevSong ? (
           <a
-            href={`/songs/${prevSong.data.year}/${prevSong.slug.split('/').pop()}`}
+            href={`/songs/${prevSong.data.year}/${prevSong.id.split('/').pop()}`}
             class="flex items-center gap-3 text-earth-600 hover:text-amber-700 group"
           >
             <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +142,7 @@ const placeholderBg = 'from-amber-600 to-amber-800';
 
         {nextSong ? (
           <a
-            href={`/songs/${nextSong.data.year}/${nextSong.slug.split('/').pop()}`}
+            href={`/songs/${nextSong.data.year}/${nextSong.id.split('/').pop()}`}
             class="flex items-center gap-3 text-earth-600 hover:text-amber-700 group"
           >
             <div class="text-right">

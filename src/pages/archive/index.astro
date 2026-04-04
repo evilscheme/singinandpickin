@@ -69,7 +69,7 @@ years.forEach((year) => {
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {songsByYear[year].map((song, songIndex) => {
-            const songSlug = `${song.data.year}/${song.slug.split('/').pop()}`;
+            const songSlug = `${song.data.year}/${song.id.split('/').pop()}`;
             return (
               <SongCard
                 title={song.data.title}

@@ -10,7 +10,7 @@ const sortedSongs = allSongs.sort((a, b) => b.data.date.getTime() - a.data.date.
 
 // Current song is the most recent
 const currentSong = sortedSongs[0];
-const currentSlug = `${currentSong.data.year}/${currentSong.slug.split('/').pop()}`;
+const currentSlug = `${currentSong.data.year}/${currentSong.id.split('/').pop()}`;
 
 // Recent songs (next 4 after current)
 const recentSongs = sortedSongs.slice(1, 5);
@@ -54,7 +54,7 @@ const recentSongs = sortedSongs.slice(1, 5);
 
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
         {recentSongs.map((song, index) => {
-          const songSlug = `${song.data.year}/${song.slug.split('/').pop()}`;
+          const songSlug = `${song.data.year}/${song.id.split('/').pop()}`;
           return (
             <SongCard
               title={song.data.title}

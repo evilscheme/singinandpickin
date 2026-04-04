@@ -1,4 +1,6 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { z } from 'zod';
 
 const extrasSchema = z.object({
   title: z.string(),
@@ -7,7 +9,7 @@ const extrasSchema = z.object({
 });
 
 const songsCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: 'src/content/songs' }),
   schema: z.object({
     title: z.string(),
     artist: z.string(),
