@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 const extrasSchema = z.object({
   title: z.string(),
-  url: z.string().url(),
+  url: z.url(),
   type: z.enum(['audio', 'video', 'youtube']).default('audio'),
 });
 
@@ -18,11 +18,11 @@ const songsCollection = defineCollection({
     year: z.number(),
     key: z.string().optional(),
     picker: z.string(),
-    youtubeUrl: z.string().url().optional(),
-    chordsUrl: z.string().url().optional(),
-    printableUrl: z.string().url().optional(),
-    spotifyUrl: z.string().url().optional(),
-    appleMusicUrl: z.string().url().optional(),
+    youtubeUrl: z.url().optional(),
+    chordsUrl: z.url().optional(),
+    printableUrl: z.url().optional(),
+    spotifyUrl: z.url().optional(),
+    appleMusicUrl: z.url().optional(),
     coverImage: z.string().optional(),
     extras: z.array(extrasSchema).optional(),
   }),
