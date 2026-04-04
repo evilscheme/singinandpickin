@@ -116,8 +116,13 @@ function parseChordPro(text: string): string {
           // Text following this chord
           const textAfter = line.slice(index + length, nextIndex).replace(/\[([^\]]+)\]/g, '');
 
-          if (textAfter) {
-            lineHtml += `<span class="chord-word"><span class="chord">${chord}</span>${textAfter}</span>`;
+          if (textAfter && textAfter.trim()) {
+            // Move leading/trailing whitespace outside the inline-block so browsers render it as inter-word spacing
+            const leadTrimmed = textAfter.replace(/^\s+/, '');
+            const leading = textAfter.slice(0, textAfter.length - leadTrimmed.length);
+            const fullTrimmed = leadTrimmed.replace(/\s+$/, '');
+            const trailing = leadTrimmed.slice(fullTrimmed.length);
+            lineHtml += `${leading}<span class="chord-word"><span class="chord">${chord}</span>${fullTrimmed}</span>${trailing}`;
           } else {
             lineHtml += `<span class="chord-word chord-only"><span class="chord">${chord}</span></span>`;
           }

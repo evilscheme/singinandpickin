@@ -69,20 +69,17 @@
 
 .chordpro-line {
   @apply mb-1;
-  padding-top: 1.2em;
-  /* line-height: 2.2; */
 }
 
 .chord-word {
-  position: relative;
-  display: inline;
+  display: inline-block;
+  vertical-align: bottom;
 }
 
 .chord-word .chord {
   @apply text-amber-700 font-bold;
-  position: absolute;
-  top: -1.4em;
-  left: 0;
+  display: block;
+  line-height: 1.4;
   white-space: nowrap;
 }
 
@@ -90,6 +87,11 @@
   display: inline-block;
   min-width: 2.5em;
   padding-right: 0.5em;
+}
+
+.chord-only::after {
+  content: '\200B'; /* zero-width space creates a text-height line below the chord */
+  display: block;
 }
 
 .chordpro-chords-only {
@@ -129,13 +131,6 @@
 @media (max-width: 640px) {
   .chordpro-container {
     @apply text-xs;
-  }
-  .chordpro-line {
-    padding-top: 1.0em;
-    /* line-height: 2.0; */
-  }
-  .chord-word .chord {
-    top: -1.2em;
   }
 }
 
