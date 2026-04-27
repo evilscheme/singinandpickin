@@ -5,14 +5,15 @@ date: 2026-05-01
 month: "May"
 year: 2026
 picker: "Nico"
+key: Am (or C)
 youtubeUrl: "https://www.youtube.com/watch?v=N-HXfMvU85g"
-capo: 4
+chordsUrl: "https://tabs.ultimate-guitar.com/tab/the-decemberists/summersong-chords-662666"
 ---
 
 ```chordpro
 The Decemberists - Summersong
 
-Corrected version
+{Capo: 4th fret}
 
 {Intro}
 
