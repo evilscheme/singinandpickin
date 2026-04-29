@@ -1,0 +1,26 @@
+---
+interface Cell {
+  label: string;
+  value: string;
+}
+
+interface Props {
+  cells: Cell[];
+}
+
+const { cells } = Astro.props;
+---
+
+<div class="flex border-y border-ink">
+  {cells.map((cell, i) => (
+    <div
+      class:list={[
+        'flex-1 px-5 py-4 font-sans',
+        i < cells.length - 1 && 'border-r border-ink',
+      ]}
+    >
+      <div class="meta-label mb-1">{cell.label}</div>
+      <div class="meta-value">{cell.value}</div>
+    </div>
+  ))}
+</div>

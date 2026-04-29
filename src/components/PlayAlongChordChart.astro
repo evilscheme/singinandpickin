@@ -12,18 +12,9 @@ const { content, title, songKey } = Astro.props;
 
 <div class="play-along-wrapper">
   <!-- Play Along Button -->
-  <div class="flex items-center justify-between mb-4">
-    <h2 class="font-serif text-2xl font-bold text-earth-900">Chords & Lyrics</h2>
-    <button
-      id="enter-play-along"
-      class="flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white rounded-lg transition-colors font-medium"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-      </svg>
-      Play Along
-    </button>
+  <div class="flex items-baseline justify-between mb-7">
+    <h2 class="font-display font-black tracking-[-0.02em] text-[26px] md:text-[32px] m-0">Chords &amp; lyrics</h2>
+    <button id="enter-play-along" class="btn-ghost">Play Along</button>
   </div>
 
   <!-- Play Along Container -->
@@ -32,12 +23,12 @@ const { content, title, songKey } = Astro.props;
     <div id="play-along-header" class="play-along-header hidden">
       <div class="flex items-center justify-between">
         <div>
-          <h1 class="text-xl sm:text-2xl font-serif font-bold text-white">{title}</h1>
-          {songKey && <span class="text-amber-300 text-sm">Key: {songKey}</span>}
+          <h1 class="text-xl sm:text-2xl font-display font-bold text-paper m-0">{title}</h1>
+          {songKey && <span class="font-sans uppercase text-accent text-[10px] tracking-[0.22em]">Key: {songKey}</span>}
         </div>
         <button
           id="exit-play-along"
-          class="p-3 text-white/80 hover:text-white active:text-white rounded-lg transition-colors"
+          class="p-3 text-paper/80 hover:text-paper transition-colors"
           title="Exit (Esc)"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -59,7 +50,7 @@ const { content, title, songKey } = Astro.props;
         <div class="flex items-center gap-4">
           <button
             id="play-pause-btn"
-            class="p-4 sm:p-3 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white rounded-full transition-colors"
+            class="p-4 sm:p-3 bg-accent hover:bg-accent/90 text-paper rounded-full transition-colors"
             title="Play/Pause (Space)"
           >
             <svg id="play-icon" class="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +63,7 @@ const { content, title, songKey } = Astro.props;
 
           <button
             id="restart-btn"
-            class="p-3 text-white/80 hover:text-white active:text-white rounded-lg transition-colors"
+            class="p-3 text-paper/80 hover:text-paper transition-colors"
             title="Restart (R)"
           >
             <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,17 +73,17 @@ const { content, title, songKey } = Astro.props;
         </div>
 
         <!-- Speed Control -->
-        <div class="flex items-center gap-3 bg-earth-800/50 px-4 py-2 rounded-full">
-          <label for="speed-slider" class="text-white/80 text-sm">Speed:</label>
+        <div class="flex items-center gap-3 border border-paper/20 px-4 py-2">
+          <label for="speed-slider" class="text-paper/80 text-sm font-sans uppercase tracking-[0.18em] text-[10px]">Speed</label>
           <input
             type="range"
             id="speed-slider"
             min="1"
             max="10"
             value="3"
-            class="w-32 accent-amber-500"
+            class="w-32 accent-accent"
           />
-          <span id="speed-value" class="text-white font-mono text-sm w-6">3</span>
+          <span id="speed-value" class="text-paper font-mono text-sm w-6">3</span>
         </div>
       </div>
     </div>
@@ -106,7 +97,7 @@ const { content, title, songKey } = Astro.props;
   }
 
   .play-along-header {
-    @apply px-4 sm:px-6 py-4 bg-earth-900 border-b border-earth-700;
+    @apply px-4 sm:px-6 py-4 bg-ink border-b border-paper/15;
   }
 
   .play-along-content {
@@ -115,7 +106,7 @@ const { content, title, songKey } = Astro.props;
 
   /* Controls are always fixed when visible - avoids iOS scroll capture issues */
   .play-along-controls {
-    @apply px-4 sm:px-6 py-4 bg-earth-900/95 backdrop-blur border-t border-earth-700;
+    @apply px-4 sm:px-6 py-4 bg-ink/95 backdrop-blur border-t border-paper/15;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -125,8 +116,7 @@ const { content, title, songKey } = Astro.props;
 
   /* Play-along active mode (works on all devices including iOS) */
   .play-along-container.active {
-    @apply fixed inset-0 z-50 bg-earth-900 flex flex-col;
-    border-radius: 0;
+    @apply fixed inset-0 z-50 bg-ink flex flex-col;
   }
 
   .play-along-container.active .play-along-header {
@@ -135,42 +125,42 @@ const { content, title, songKey } = Astro.props;
 
   .play-along-container.active .play-along-content {
     @apply flex-1 px-4 sm:px-8 py-6;
-    padding-bottom: 100px; /* Space for fixed controls */
+    padding-bottom: 100px;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
   }
 
   /* Dark mode text colors for play-along */
   .play-along-container.active .play-along-content :global(.chord-chart) {
-    @apply bg-transparent border-0 text-base sm:text-lg;
+    @apply bg-transparent border-0 text-base sm:text-lg p-0;
   }
 
   .play-along-container.active .play-along-content :global(.chordpro-line) {
-    @apply text-white text-lg sm:text-xl;
+    @apply text-paper text-lg sm:text-xl;
     line-height: 2.6;
     padding-top: 1.4em;
   }
 
   .play-along-container.active .play-along-content :global(.chord-word .chord) {
-    @apply text-amber-400 text-lg sm:text-xl;
+    @apply text-accent text-lg sm:text-xl;
     top: -1.4em;
   }
 
   .play-along-container.active .play-along-content :global(.chord-inline) {
-    @apply text-amber-400 text-lg sm:text-xl;
+    @apply text-accent text-lg sm:text-xl;
   }
 
   .play-along-container.active .play-along-content :global(.chord-annotation) {
-    @apply text-white/60;
+    @apply text-paper/60;
   }
 
   .play-along-container.active .play-along-content :global(.chord-text),
   .play-along-container.active .play-along-content :global(.chordpro-lyrics) {
-    @apply text-white;
+    @apply text-paper;
   }
 
   .play-along-container.active .play-along-content :global(.chordpro-section) {
-    @apply text-amber-500 text-base sm:text-lg font-bold;
+    @apply text-accent;
   }
 
   .play-along-container.active .play-along-controls {
@@ -182,15 +172,14 @@ const { content, title, songKey } = Astro.props;
     overflow: hidden;
   }
 
-  /* Scrollbar styling */
   .play-along-container.active .play-along-content::-webkit-scrollbar {
     width: 8px;
   }
   .play-along-container.active .play-along-content::-webkit-scrollbar-track {
-    @apply bg-earth-800;
+    background: rgba(246, 241, 231, 0.08);
   }
   .play-along-container.active .play-along-content::-webkit-scrollbar-thumb {
-    @apply bg-earth-600 rounded;
+    background: rgba(246, 241, 231, 0.3);
   }
 </style>
 

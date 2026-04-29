@@ -1,5 +1,7 @@
 ---
-import StreamingLinks from './StreamingLinks.astro';
+import ArtworkTile from './ArtworkTile.astro';
+import MetaRow from './MetaRow.astro';
+import { heroTitleSize } from '../utils/song';
 import { getYouTubeThumbnail } from '../utils/youtube';
 
 interface Props {
@@ -9,13 +11,11 @@ interface Props {
   year: number;
   picker: string;
   slug: string;
-  key?: string;
+  issueNo: string;
+  songKey?: string;
   coverImage?: string;
   youtubeUrl?: string;
-  spotifyUrl?: string;
-  appleMusicUrl?: string;
   chordsUrl?: string;
-  printableUrl?: string;
 }
 
 const {
@@ -25,119 +25,88 @@ const {
   year,
   picker,
   slug,
-  key,
+  issueNo,
+  songKey,
   coverImage,
   youtubeUrl,
-  spotifyUrl,
-  appleMusicUrl,
   chordsUrl,
-  printableUrl,
 } = Astro.props;
 
-// Use coverImage if provided, otherwise try YouTube thumbnail
-const displayImage = coverImage || (youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : null);
+const displayImage = coverImage || (youtubeUrl ? getYouTubeThumbnail(youtubeUrl) : null) || undefined;
 
-const placeholderBg = 'from-amber-600 to-amber-800';
+const { fontSize, lineHeight } = heroTitleSize(title);
+
+// Mobile cap: clamp(28px, 8vw, 40px) regardless of length.
+const desktopHeadline = `font-size: ${fontSize}px; line-height: ${lineHeight};`;
+const mobileHeadline = `font-size: clamp(28px, 8vw, 40px); line-height: 0.95;`;
+
+const cells = [
+  { label: 'Month', value: `${month} ${year}` },
+  ...(songKey ? [{ label: 'Key', value: songKey }] : []),
+  { label: 'Picked by', value: picker },
+];
 ---
 
-<section class="relative overflow-hidden text-white py-20 bg-earth-900">
-  <!-- Blurred background image -->
-  {displayImage && (
-    <div class="absolute inset-0 z-0">
-      <img
-        src={displayImage}
-        alt=""
-        class="w-full h-full object-cover scale-110 blur-2xl opacity-40"
-        aria-hidden="true"
-      />
-      <div class="absolute inset-0 bg-gradient-to-b from-earth-900/80 via-earth-900/90 to-earth-900"></div>
-    </div>
-  )}
+<section class="border-b border-ink px-5 py-12 md:px-[88px] md:pt-[88px] md:pb-[80px]">
+  <div class="grid grid-cols-1 gap-10 md:grid-cols-[1.05fr_1fr] md:gap-24 md:items-start">
+    <div>
+      <div class="eyebrow mb-7">This Month's Song · No. {issueNo}</div>
 
-  <!-- Fallback gradient background when no image -->
-  {!displayImage && (
-    <div class="absolute inset-0 z-0 bg-gradient-to-b from-earth-900 to-earth-800"></div>
-  )}
+      <h1
+        class="font-display font-black text-balance tracking-[-0.025em] m-0 mb-[18px] hero-headline"
+        data-desktop-style={desktopHeadline}
+        data-mobile-style={mobileHeadline}
+      ><a href={`/songs/${slug}`} class="text-ink hover:text-accent transition-colors">{title}</a></h1>
 
-  <div class="relative z-10 max-w-6xl mx-auto px-4">
-    <div class="section-header text-amber-400 mb-6 text-center md:text-left">This Month's Song</div>
+      <div class="font-display italic text-muted text-[18px] md:text-[22px] mb-9">by {artist}</div>
 
-    <div class="flex flex-col md:flex-row gap-10 items-center">
-      <!-- Cover Art with gradient border effect -->
-      <a href={`/songs/${slug}`} class="w-72 h-72 md:w-96 md:h-96 flex-shrink-0 block group">
-        <div class="relative aspect-square rounded-2xl overflow-hidden shadow-2xl transition-all duration-500 group-hover:shadow-glow-amber-lg group-hover:scale-[1.02]">
-          <!-- Animated gradient border -->
-          <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-600 to-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse-glow"></div>
-
-          <div class="relative w-full h-full rounded-2xl overflow-hidden">
-            {displayImage ? (
-              <img
-                src={displayImage}
-                alt={`${title} by ${artist}`}
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            ) : (
-              <div class={`w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br ${placeholderBg}`}>
-                <span class="text-7xl mb-4" aria-hidden="true">🎵</span>
-                <span class="font-serif text-center text-3xl font-medium leading-tight">{title}</span>
-                <span class="text-xl opacity-80 mt-3">{artist}</span>
-              </div>
-            )}
-          </div>
-        </div>
+      <a href={`/songs/${slug}`} class="md:hidden block mb-6">
+        <ArtworkTile coverImage={displayImage} alt={`${title} by ${artist}`} aspect="1" showLabel />
       </a>
 
-      <!-- Song Info -->
-      <div class="flex-grow text-center md:text-left">
-        <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-amber-400 mb-3 drop-shadow-lg">
-          {title}
-        </h1>
-        <p class="text-2xl md:text-3xl text-earth-200 mb-6">{artist}</p>
+      <div class="mb-8">
+        <MetaRow cells={cells} />
+      </div>
 
-        <div class="flex flex-wrap justify-center md:justify-start gap-5 text-sm text-earth-300 mb-8">
-          <span class="flex items-center gap-2 bg-earth-800/50 px-4 py-2 rounded-full backdrop-blur-sm">
-            <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            {month} {year}
-          </span>
-          {key && (
-            <span class="flex items-center gap-2 bg-earth-800/50 px-4 py-2 rounded-full backdrop-blur-sm">
-              <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
-              </svg>
-              Key of {key}
-            </span>
-          )}
-          <span class="flex items-center gap-2 bg-earth-800/50 px-4 py-2 rounded-full backdrop-blur-sm">
-            <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
-            Picked by {picker}
-          </span>
-        </div>
-
-        <div class="mb-8">
-          <StreamingLinks
-            youtubeUrl={youtubeUrl}
-            spotifyUrl={spotifyUrl}
-            appleMusicUrl={appleMusicUrl}
-            chordsUrl={chordsUrl}
-            printableUrl={printableUrl}
-            dark
-          />
-        </div>
-
-        <a
-          href={`/songs/${slug}`}
-          class="btn btn-primary text-lg hover-lift group/btn inline-flex"
-        >
-          View Full Song Page
-          <svg class="w-5 h-5 transition-transform group-hover/btn:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </a>
+      <div class="flex flex-col gap-3 md:flex-row md:flex-wrap md:gap-3">
+        <a href={`/songs/${slug}`} class="btn-primary">Open Song Page →</a>
+        {youtubeUrl && (
+          <a href={youtubeUrl} target="_blank" rel="noopener noreferrer" class="btn-ghost">Listen on YouTube</a>
+        )}
+        {chordsUrl && (
+          <a href={chordsUrl} target="_blank" rel="noopener noreferrer" class="btn-ghost">Chords</a>
+        )}
       </div>
     </div>
+
+    <a href={`/songs/${slug}`} class="hidden md:block">
+      <ArtworkTile coverImage={displayImage} alt={`${title} by ${artist}`} aspect="1 / 1.18" showLabel />
+    </a>
   </div>
 </section>
+
+<style>
+  .hero-headline {
+    font-size: clamp(28px, 8vw, 40px);
+    line-height: 0.95;
+  }
+  @media (min-width: 768px) {
+    .hero-headline {
+      /* Desktop sizes are injected via inline style by the script below. */
+    }
+  }
+</style>
+
+<script>
+  // Apply the auto-sized desktop styles only above the md breakpoint, falling back to clamp on mobile.
+  const apply = () => {
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+    document.querySelectorAll<HTMLElement>('.hero-headline').forEach((el) => {
+      el.style.cssText = isDesktop
+        ? (el.dataset.desktopStyle ?? '')
+        : (el.dataset.mobileStyle ?? '');
+    });
+  };
+  apply();
+  window.addEventListener('resize', apply);
+</script>

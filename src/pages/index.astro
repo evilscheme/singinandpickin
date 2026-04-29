@@ -2,91 +2,80 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CurrentSongHero from '../components/CurrentSongHero.astro';
 import SongCard from '../components/SongCard.astro';
+import SongRow from '../components/SongRow.astro';
+import IssueBar from '../components/IssueBar.astro';
 import { getCollection } from 'astro:content';
+import { issueNo, songCover, songSlug, sortByDateDesc } from '../utils/song';
 
-// Get all songs, sorted by date descending
 const allSongs = await getCollection('songs');
-const sortedSongs = allSongs.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const sorted = sortByDateDesc(allSongs);
 
-// Current song is the most recent
-const currentSong = sortedSongs[0];
-const currentSlug = `${currentSong.data.year}/${currentSong.id.split('/').pop()}`;
-
-// Recent songs (next 4 after current)
-const recentSongs = sortedSongs.slice(1, 5);
+const current = sorted[0];
+const currentIssue = issueNo(current, allSongs);
+const recent = sorted.slice(1, 5);
+const totalCount = allSongs.length;
 ---
 
 <BaseLayout title="Home">
-  {currentSong && (
-    <CurrentSongHero
-      title={currentSong.data.title}
-      artist={currentSong.data.artist}
-      month={currentSong.data.month}
-      year={currentSong.data.year}
-      picker={currentSong.data.picker}
-      slug={currentSlug}
-      key={currentSong.data.key}
-      coverImage={currentSong.data.coverImage}
-      youtubeUrl={currentSong.data.youtubeUrl}
-      spotifyUrl={currentSong.data.spotifyUrl}
-      appleMusicUrl={currentSong.data.appleMusicUrl}
-      chordsUrl={currentSong.data.chordsUrl}
-      printableUrl={currentSong.data.printableUrl}
-    />
-  )}
+  <IssueBar
+    left={`Issue No. ${currentIssue}`}
+    right={`${current.data.month} ${current.data.year}`}
+  />
 
-  <!-- Recent Songs Section -->
-  <section class="pt-8 pb-16 bg-earth-100">
-    <!-- Section divider -->
-    <div class="section-divider mb-8">
-      <span class="section-divider-icon">🎶</span>
+  <CurrentSongHero
+    title={current.data.title}
+    artist={current.data.artist}
+    month={current.data.month}
+    year={current.data.year}
+    picker={current.data.picker}
+    slug={songSlug(current)}
+    issueNo={currentIssue}
+    songKey={current.data.key}
+    coverImage={songCover(current)}
+    youtubeUrl={current.data.youtubeUrl}
+    chordsUrl={current.data.chordsUrl}
+  />
+
+  <section class="border-b border-ink px-5 py-12 md:px-16 md:pt-16 md:pb-12">
+    <div class="flex justify-between items-baseline mb-10">
+      <h2 class="font-display font-black tracking-[-0.02em] text-[28px] md:text-[38px] m-0">From the archive</h2>
+      <a href="/archive" class="font-sans uppercase text-muted hover:text-accent text-[11px] tracking-[0.18em] transition-colors">
+        Recent · View all {totalCount} →
+      </a>
     </div>
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="flex items-center justify-between mb-10 animate-on-scroll">
-        <h2 class="font-serif text-3xl md:text-4xl font-bold text-earth-900">Recent Songs</h2>
-        <a href="/archive" class="text-amber-700 hover:text-amber-800 font-medium flex items-center gap-2 hover-lift px-4 py-2 rounded-lg hover:bg-amber-50 transition-colors">
-          View All
-          <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </a>
-      </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {recentSongs.map((song, index) => {
-          const songSlug = `${song.data.year}/${song.id.split('/').pop()}`;
-          return (
-            <SongCard
-              title={song.data.title}
-              artist={song.data.artist}
-              month={song.data.month}
-              year={song.data.year}
-              picker={song.data.picker}
-              slug={songSlug}
-              coverImage={song.data.coverImage}
-              youtubeUrl={song.data.youtubeUrl}
-              animationDelay={index + 1}
-            />
-          );
-        })}
-      </div>
+    <!-- Mobile: row list -->
+    <div class="md:hidden">
+      {recent.map((song, i) => (
+        <SongRow
+          title={song.data.title}
+          artist={song.data.artist}
+          month={song.data.month}
+          year={song.data.year}
+          picker={song.data.picker}
+          slug={songSlug(song)}
+          coverImage={songCover(song)}
+          paletteIndex={i}
+        />
+      ))}
     </div>
-  </section>
 
-  <!-- About Section -->
-  <section class="py-20 bg-earth-100">
-    <div class="max-w-4xl mx-auto px-4 text-center animate-on-scroll">
-      <div class="mb-6">
-        <svg class="w-12 h-12 mx-auto text-amber-500/50" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-        </svg>
-      </div>
-      <h2 class="font-serif text-3xl md:text-4xl font-bold text-earth-900 mb-6">About Our Gathering</h2>
-      <p class="text-earth-600 text-lg md:text-xl leading-relaxed">
-        Each month, our group gathers to sing and play music together. One person picks a song,
-        and we all learn it for our monthly get-together. This site is our songbook—a growing
-        collection of the tunes we've shared over the years.
-      </p>
+    <!-- Desktop: card grid -->
+    <div class="hidden md:grid grid-cols-4 gap-8">
+      {recent.map((song, i) => (
+        <SongCard
+          title={song.data.title}
+          artist={song.data.artist}
+          month={song.data.month}
+          year={song.data.year}
+          picker={song.data.picker}
+          slug={songSlug(song)}
+          issueNo={issueNo(song, allSongs)}
+          coverImage={songCover(song)}
+          paletteIndex={i}
+        />
+      ))}
     </div>
   </section>
+
 </BaseLayout>
