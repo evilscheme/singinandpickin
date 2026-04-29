@@ -1,0 +1,23 @@
+---
+interface Props {
+  left: string;
+  right: string;
+  /** Optional center cell (used on song detail breadcrumbs). */
+  center?: string;
+  /** When true, render the left text as an accent-colored link/back. */
+  leftAccent?: boolean;
+  leftHref?: string;
+}
+
+const { left, right, center, leftAccent = false, leftHref } = Astro.props;
+---
+
+<div class="flex justify-between items-center border-b border-ink px-5 py-3 md:px-16 md:py-3.5">
+  {leftHref ? (
+    <a href={leftHref} class:list={['issue-meta', leftAccent && 'text-accent hover:text-ink']}>{left}</a>
+  ) : (
+    <span class:list={['issue-meta', leftAccent && 'text-accent']}>{left}</span>
+  )}
+  {center && <span class="issue-meta hidden md:inline">{center}</span>}
+  <span class="issue-meta">{right}</span>
+</div>

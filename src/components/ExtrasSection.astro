@@ -58,18 +58,18 @@ function getEmbedInfo(extra: Extra): { type: 'youtube' | 'gdrive-video' | 'sound
 ---
 
 {extras && extras.length > 0 && (
-  <section class="mb-12">
-    <h2 class="font-serif text-2xl font-bold text-earth-900 mb-4">Additional Resources</h2>
-    <div class="space-y-4">
+  <section>
+    <h2 class="font-display font-black tracking-[-0.02em] text-[26px] md:text-[32px] m-0 mb-6">Additional resources</h2>
+    <div class="space-y-6">
       {extras.map((extra) => {
         const embed = getEmbedInfo(extra);
         return (
-          <div class="bg-earth-100 rounded-xl p-4 border border-earth-200">
-            <h3 class="font-medium text-earth-800 mb-3">{extra.title}</h3>
+          <div class="border-t border-ink pt-5">
+            <h3 class="font-display italic text-muted text-[16px] md:text-[18px] mb-3">{extra.title}</h3>
 
             {embed.type === 'youtube' && (
-              <div class="max-w-md">
-                <div class="aspect-video rounded-lg overflow-hidden bg-earth-200">
+              <div class="max-w-xl">
+                <div class="aspect-video overflow-hidden border border-ink bg-ink">
                   <iframe
                     src={embed.url}
                     title={extra.title}
@@ -83,7 +83,7 @@ function getEmbedInfo(extra: Extra): { type: 'youtube' | 'gdrive-video' | 'sound
             )}
 
             {embed.type === 'gdrive-video' && (
-              <div class="aspect-video rounded-lg overflow-hidden">
+              <div class="aspect-video overflow-hidden border border-ink">
                 <iframe
                   src={embed.url}
                   class="w-full h-full"
@@ -100,7 +100,7 @@ function getEmbedInfo(extra: Extra): { type: 'youtube' | 'gdrive-video' | 'sound
                 height="166"
                 allow="autoplay"
                 src={embed.url}
-                class="rounded-lg border-0"
+                class="border border-ink"
               ></iframe>
             )}
 
@@ -109,11 +109,8 @@ function getEmbedInfo(extra: Extra): { type: 'youtube' | 'gdrive-video' | 'sound
                 href={extra.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 text-amber-700 hover:text-amber-800 font-medium"
+                class="btn-ghost"
               >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                </svg>
                 Download {extra.type}
               </a>
             )}

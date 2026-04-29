@@ -1,0 +1,37 @@
+---
+import { archiveCardPalette } from '../utils/song';
+
+interface Props {
+  title: string;
+  artist: string;
+  month: string;
+  year: number;
+  picker: string;
+  slug: string;
+  coverImage?: string;
+  paletteIndex?: number;
+}
+
+const { title, artist, month, year, picker, slug, coverImage, paletteIndex = 0 } = Astro.props;
+const fallback = archiveCardPalette[paletteIndex % archiveCardPalette.length];
+---
+
+<a
+  href={`/songs/${slug}`}
+  class="grid grid-cols-[64px_1fr_auto] gap-3.5 items-center py-3.5 border-t border-ink group"
+>
+  <div
+    class="w-16 h-16 border border-ink"
+    style={coverImage ? '' : `background-color: ${fallback};`}
+  >
+    {coverImage && <img src={coverImage} alt={`${title} by ${artist}`} class="w-full h-full object-cover block" loading="lazy" />}
+  </div>
+  <div class="min-w-0">
+    <div class="font-display font-bold text-[17px] leading-[1.1] text-balance text-ink group-hover:text-accent transition-colors">{title}</div>
+    <div class="font-display italic text-muted text-[13px] mt-0.5">{artist}</div>
+  </div>
+  <div class="text-right font-sans uppercase text-muted text-[9px] tracking-[0.16em] leading-[1.4]">
+    <div>{month.slice(0, 3)} {String(year).slice(2)}</div>
+    <div>by {picker}</div>
+  </div>
+</a>

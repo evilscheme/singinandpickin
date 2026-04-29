@@ -1,0 +1,47 @@
+---
+interface Props {
+  coverImage?: string;
+  alt?: string;
+  /** "1" for square (cards/song page), "1 / 1.18" for homepage hero. */
+  aspect?: '1' | '1 / 1.18';
+  /** Show the JetBrains "[ album art · placeholder ]" caption when no cover. */
+  showLabel?: boolean;
+  /** Solid fallback color when no coverImage AND no stripe placeholder is wanted (used by archive cards). */
+  solidColor?: string;
+}
+
+const {
+  coverImage,
+  alt = '',
+  aspect = '1',
+  showLabel = false,
+  solidColor,
+} = Astro.props;
+
+const aspectStyle = `aspect-ratio: ${aspect};`;
+const useStripes = !coverImage && !solidColor;
+const useSolid = !coverImage && solidColor;
+---
+
+<div
+  class:list={[
+    'w-full border border-ink flex items-end',
+    useStripes && 'bg-art-stripes-mobile md:bg-art-stripes',
+  ]}
+  style={[
+    aspectStyle,
+    useSolid ? `background-color: ${solidColor};` : '',
+  ].filter(Boolean).join(' ')}
+>
+  {coverImage && (
+    <img
+      src={coverImage}
+      alt={alt}
+      class="w-full h-full object-cover block"
+      loading="lazy"
+    />
+  )}
+  {!coverImage && showLabel && (
+    <span class="font-mono text-muted text-[10px] p-[14px] md:p-[18px]">[ album art · placeholder ]</span>
+  )}
+</div>

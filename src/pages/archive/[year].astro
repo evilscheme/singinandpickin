@@ -1,19 +1,20 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SongCard from '../../components/SongCard.astro';
+import SongRow from '../../components/SongRow.astro';
+import IssueBar from '../../components/IssueBar.astro';
 import { getCollection } from 'astro:content';
+import { issueNo, songCover, songSlug, sortByDateDesc } from '../../utils/song';
 
 export async function getStaticPaths() {
   const allSongs = await getCollection('songs');
-  const years = [...new Set(allSongs.map((song) => song.data.year))];
+  const years = [...new Set(allSongs.map((s) => s.data.year))];
 
   return years.map((year) => ({
     params: { year: String(year) },
     props: {
       year,
-      songs: allSongs
-        .filter((song) => song.data.year === year)
-        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+      songs: sortByDateDesc(allSongs.filter((s) => s.data.year === year)),
     },
   }));
 }
@@ -25,59 +26,67 @@ interface Props {
 
 const { year, songs } = Astro.props;
 
-// Get all years for navigation
 const allSongs = await getCollection('songs');
 const allYears = [...new Set(allSongs.map((s) => s.data.year))].sort((a, b) => b - a);
 ---
 
-<BaseLayout title={`${year} Songs`}>
-  <div class="bg-earth-900 text-white py-12">
-    <div class="max-w-6xl mx-auto px-4">
-      <nav class="text-sm text-earth-400 mb-4">
-        <a href="/archive" class="hover:text-amber-400">Archive</a>
-        <span class="mx-2">/</span>
-        <span class="text-earth-200">{year}</span>
-      </nav>
-      <h1 class="font-serif text-4xl font-bold text-amber-400 mb-4">{year} Songs</h1>
-      <p class="text-earth-300 text-lg">{songs.length} songs from {year}.</p>
-    </div>
-  </div>
+<BaseLayout title={`${year} · Archive`}>
+  <IssueBar
+    left="← Archive"
+    leftAccent
+    leftHref="/archive"
+    right={`${songs.length} songs in ${year}`}
+  />
 
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <!-- Year Navigation -->
-    <div class="flex flex-wrap gap-2 mb-8">
+  <section class="px-5 py-12 md:px-16 md:pt-16 md:pb-12">
+    <h1 class="font-display font-black tracking-[-0.025em] text-[44px] md:text-[60px] leading-[1] m-0 mb-10">{year}</h1>
+
+    <nav class="flex flex-wrap gap-2 mb-12 pb-6 border-b border-ink" aria-label="Years">
       {allYears.map((y) => (
         <a
           href={`/archive/${y}`}
+          aria-current={y === year ? 'page' : undefined}
           class:list={[
-            "px-4 py-2 rounded-full font-medium text-sm transition-colors",
-            y === year
-              ? "bg-amber-500 text-white"
-              : "bg-earth-200 text-earth-700 hover:bg-amber-500 hover:text-white"
+            'font-sans uppercase text-[11px] tracking-[0.18em] px-3 py-2 border border-ink transition-colors',
+            y === year ? 'bg-ink text-paper' : 'hover:bg-ink hover:text-paper',
           ]}
         >
           {y}
         </a>
       ))}
+    </nav>
+
+    <div class="md:hidden">
+      {songs.map((song, i) => (
+        <SongRow
+          title={song.data.title}
+          artist={song.data.artist}
+          month={song.data.month}
+          year={song.data.year}
+          picker={song.data.picker}
+          slug={songSlug(song)}
+          coverImage={songCover(song)}
+          paletteIndex={i}
+        />
+      ))}
     </div>
 
-    <!-- Songs Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {songs.map((song) => {
-        const songSlug = `${song.data.year}/${song.id.split('/').pop()}`;
-        return (
+    <ul class="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-8 list-none p-0 m-0">
+      {songs.map((song, i) => (
+        <li>
           <SongCard
             title={song.data.title}
             artist={song.data.artist}
             month={song.data.month}
             year={song.data.year}
             picker={song.data.picker}
-            slug={songSlug}
-            coverImage={song.data.coverImage}
-            youtubeUrl={song.data.youtubeUrl}
+            slug={songSlug(song)}
+            issueNo={issueNo(song, allSongs)}
+            coverImage={songCover(song)}
+            paletteIndex={i}
           />
-        );
-      })}
-    </div>
-  </div>
+        </li>
+      ))}
+    </ul>
+  </section>
 </BaseLayout>
