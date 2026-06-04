@@ -5,6 +5,8 @@ import SongRow from '../../components/SongRow.astro';
 import IssueBar from '../../components/IssueBar.astro';
 import { getCollection } from 'astro:content';
 import { issueNo, songCover, songSlug, sortByDateDesc } from '../../utils/song';
+import { appleMusicPlaylistUrl } from '../../utils/site';
+import AppleMusicIcon from '../../components/AppleMusicIcon.astro';
 
 const allSongs = await getCollection('songs');
 const sorted = sortByDateDesc(allSongs);
@@ -29,6 +31,24 @@ const years = Object.keys(songsByYear).map(Number).sort((a, b) => b - a);
         All the songs we've ever sung
       </p>
     </div>
+
+    <a
+      href={appleMusicPlaylistUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="group flex items-center gap-4 mb-12 p-5 md:p-6 border border-ink hover:bg-ink transition-colors"
+    >
+      <AppleMusicIcon size={36} class="shrink-0" />
+      <div class="min-w-0">
+        <p class="font-sans uppercase text-[11px] tracking-[0.18em] text-accent m-0 group-hover:text-paper transition-colors">
+          Full Playlist
+        </p>
+        <p class="font-serif text-[17px] text-ink m-0 mt-1 text-pretty group-hover:text-paper transition-colors">
+          All the songs, in an Apple Music playlist
+          <span class="inline-block ml-1 transition-transform group-hover:translate-x-1">→</span>
+        </p>
+      </div>
+    </a>
 
     <nav class="flex flex-wrap gap-2 mb-12 pb-6 border-b border-ink" aria-label="Years">
       {years.map((year) => (

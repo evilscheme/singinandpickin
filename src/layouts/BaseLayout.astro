@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import { appleMusicPlaylistUrl } from '../utils/site';
+import AppleMusicIcon from '../components/AppleMusicIcon.astro';
 
 interface Props {
   title: string;
@@ -48,6 +50,18 @@ const navLinks = [
               </a>
             </li>
           ))}
+          <li class="flex items-center">
+            <a
+              href={appleMusicPlaylistUrl}
+              class="nav-link inline-flex transition-opacity hover:opacity-75"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Apple Music playlist"
+              aria-label="Apple Music playlist"
+            >
+              <AppleMusicIcon size={20} />
+            </a>
+          </li>
         </ul>
       </nav>
     </header>
