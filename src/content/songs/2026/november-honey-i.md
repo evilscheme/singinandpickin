@@ -8,6 +8,7 @@ picker: "Amanda"
 key: "A"
 youtubeUrl: "https://www.youtube.com/watch?v=aRaXfPOSiYA"
 spotifyUrl: "https://open.spotify.com/track/5cH3XBB6GgVYK1ruuLxhq9"
+chordsUrl: "https://tabs.ultimate-guitar.com/tab/the-pairs/honey-i-chords-6654242"
 extras:
   - title: "Isolated Vocal Harmonies"
     url: "https://soundcloud.com/bryanburns-183690504/honey-i-harmonies-isolated"
@@ -15,7 +16,7 @@ extras:
 ---
 
 ```chordpro
-{comment: Chords generated with Moises (96 bpm, 4/4). Lyrics from The Pairs' Bandcamp.}
+{comment: (96 bpm, 4/4)}
 
 {Intro (a cappella)}
 Mm hmm mm
